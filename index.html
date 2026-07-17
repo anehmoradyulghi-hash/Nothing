@@ -2,1422 +2,715 @@
 <html dir="rtl" lang="fa">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>استارکده | فروشگاه استارز و گیفت‌کارت تلگرام</title>
-<script src="https://telegram.org/js/telegram-web-app.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>پنل مدیریت استارکده</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
   :root{
-    --bg-0:#0a0b13;
-    --bg-1:#12131f;
-    --surface:#171929;
-    --surface-2:#1f2136;
-    --surface-3:#282b46;
-    --border:#2a2d47;
-    --gold-1:#ffd447;
-    --gold-2:#f4b400;
-    --gold-glow: rgba(244,180,0,.35);
-    --violet:#7c6cff;
-    --violet-2:#5b4ee0;
-    --text-0:#f6f6fb;
-    --text-1:#aab0d1;
-    --text-2:#6a6f93;
-    --success:#33d998;
-    --danger:#ff6b7a;
-    --radius-lg:22px;
-    --radius-md:16px;
-    --radius-sm:11px;
+    --bg-0:#0a0b13; --bg-1:#12131f; --surface:#171929; --surface-2:#1f2136; --surface-3:#282b46;
+    --border:#262a42; --gold-1:#ffd447; --gold-2:#f4b400; --violet:#7c6cff; --violet-2:#5b4ee0;
+    --text-0:#f6f6fb; --text-1:#aab0d1; --text-2:#6a6f93; --success:#33d998; --danger:#ff6b7a; --warn:#ffb648;
   }
   *{box-sizing:border-box; margin:0; padding:0;}
-  html,body{height:100%;}
-  body{
-    font-family:'Vazirmatn', sans-serif;
-    background:var(--bg-0);
-    color:var(--text-0);
-    -webkit-font-smoothing:antialiased;
-    overscroll-behavior:none;
-  }
-  #app{
-    max-width:430px;
-    min-height:100vh;
-    margin:0 auto;
-    background:
-      radial-gradient(120% 60% at 50% 0%, rgba(124,108,255,.14), transparent 60%),
-      var(--bg-0);
-    display:flex;
-    flex-direction:column;
-    position:relative;
-    overflow-x:hidden;
-  }
+  body{font-family:'Vazirmatn',sans-serif; background:var(--bg-0); color:var(--text-0); min-height:100vh;}
+  ::-webkit-scrollbar{width:8px; height:8px;} ::-webkit-scrollbar-thumb{background:var(--surface-3); border-radius:8px;}
 
-  /* ---------- HEADER ---------- */
-  header.topbar{
-    position:sticky; top:0; z-index:40;
-    display:flex; align-items:center; justify-content:space-between;
-    padding:14px 16px 12px;
-    background:rgba(10,11,19,.86);
-    backdrop-filter:blur(14px);
-    border-bottom:1px solid var(--border);
+  /* ---------- LOGIN ---------- */
+  #login-screen{
+    min-height:100vh; display:flex; align-items:center; justify-content:center;
+    background:radial-gradient(120% 60% at 50% 0%, rgba(124,108,255,.14), transparent 60%), var(--bg-0);
   }
-  .brand{display:flex; align-items:center; gap:9px;}
-  .brand-mark{
-    width:34px; height:34px; border-radius:10px;
-    background:linear-gradient(150deg,var(--gold-1),var(--gold-2) 60%, #c98a00);
-    display:flex; align-items:center; justify-content:center;
-    font-size:17px; box-shadow:0 4px 14px var(--gold-glow);
-    flex-shrink:0;
+  .login-card{
+    width:340px; background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:30px 26px;
+    text-align:center;
   }
-  .brand-text{display:flex; flex-direction:column; line-height:1.15;}
-  .brand-text b{font-size:15.5px; font-weight:800; letter-spacing:.2px;}
-  .brand-text span{font-size:10.5px; color:var(--text-2); font-weight:500;}
-  .wallet-chip{
-    display:flex; align-items:center; gap:7px;
-    background:var(--surface-2); border:1px solid var(--border);
-    padding:6px 10px; border-radius:999px; cursor:pointer;
-    transition:.15s;
+  .login-mark{
+    width:52px; height:52px; margin:0 auto 14px; border-radius:14px;
+    background:linear-gradient(150deg,var(--gold-1),var(--gold-2)); display:flex; align-items:center; justify-content:center;
+    font-size:24px; box-shadow:0 6px 20px rgba(244,180,0,.3);
   }
-  .wallet-chip:active{transform:scale(.96); background:var(--surface-3);}
-  .wallet-chip .amt{font-size:12.5px; font-weight:700;}
-  .wallet-chip .amt.gold{color:var(--gold-1);}
+  .login-card h1{font-size:17px; font-weight:800; margin-bottom:4px;}
+  .login-card p{font-size:12px; color:var(--text-2); margin-bottom:20px;}
+  .field{margin-bottom:14px; text-align:right;}
+  .field label{font-size:11.5px; color:var(--text-1); font-weight:600; display:block; margin-bottom:6px;}
+  input, select, textarea{
+    width:100%; background:var(--surface-2); border:1px solid var(--border); border-radius:10px;
+    padding:11px 12px; color:var(--text-0); font-family:inherit; font-size:13px;
+  }
+  input:focus, select:focus, textarea:focus{outline:none; border-color:var(--violet);}
+  .btn{
+    width:100%; padding:12px; border-radius:11px; border:none; cursor:pointer; font-family:inherit;
+    background:linear-gradient(135deg,var(--gold-1),var(--gold-2)); color:#241900; font-size:13.5px; font-weight:800;
+  }
+  .btn.secondary{background:var(--surface-2); color:var(--text-0); border:1px solid var(--border);}
+  .btn.danger{background:rgba(255,107,122,.15); color:var(--danger); border:1px solid rgba(255,107,122,.3);}
+  .btn.small{padding:7px 12px; font-size:11.5px; width:auto;}
+  .error-text{color:var(--danger); font-size:11.5px; margin-top:10px; display:none;}
 
-  /* ---------- SCROLL AREA ---------- */
-  main{flex:1; padding:14px 16px 96px; overflow-y:auto;}
-  .page{display:none; animation:fadeIn .25s ease;}
-  .page.active{display:block;}
-  @keyframes fadeIn{from{opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);}}
+  /* ---------- SHELL ---------- */
+  #shell{display:none; min-height:100vh; grid-template-columns:230px 1fr;}
+  #shell.show{display:grid;}
+  aside{
+    background:var(--bg-1); border-left:1px solid var(--border); padding:20px 14px; position:sticky; top:0; height:100vh;
+  }
+  .brand{display:flex; align-items:center; gap:9px; padding:0 6px 22px; border-bottom:1px solid var(--border); margin-bottom:16px;}
+  .brand .m{width:32px; height:32px; border-radius:9px; background:linear-gradient(150deg,var(--gold-1),var(--gold-2)); display:flex; align-items:center; justify-content:center; font-size:15px;}
+  .brand b{font-size:14px; font-weight:800;}
+  .brand span{font-size:9.5px; color:var(--text-2); display:block;}
+  .nav-item{
+    display:flex; align-items:center; gap:10px; padding:11px 12px; border-radius:10px; cursor:pointer;
+    font-size:12.5px; font-weight:700; color:var(--text-1); margin-bottom:4px; transition:.15s;
+  }
+  .nav-item:hover{background:var(--surface-2);}
+  .nav-item.active{background:linear-gradient(135deg, rgba(124,108,255,.18), rgba(124,108,255,.06)); color:var(--text-0); border:1px solid var(--border);}
+  .nav-item .ic{font-size:15px; width:18px; text-align:center;}
+  .logout-btn{margin-top:20px; width:100%;}
 
-  /* ---------- HERO ---------- */
-  .hero{
-    position:relative; overflow:hidden;
-    border-radius:var(--radius-lg);
-    padding:20px 18px;
-    background:
-      radial-gradient(120% 140% at 100% 0%, rgba(255,212,71,.22), transparent 55%),
-      linear-gradient(135deg,#1c1e34,#14152a 70%);
-    border:1px solid var(--border);
-    margin-bottom:18px;
-  }
-  .hero:before{
-    content:"✦"; position:absolute; font-size:110px; color:rgba(255,212,71,.06);
-    left:-18px; top:-30px; transform:rotate(-12deg);
-  }
-  .hero h1{font-size:18.5px; font-weight:800; margin-bottom:6px; position:relative;}
-  .hero p{font-size:12.5px; color:var(--text-1); margin-bottom:14px; line-height:1.7; position:relative; max-width:88%;}
-  .hero-cta{
-    display:inline-flex; align-items:center; gap:6px;
-    background:linear-gradient(135deg,var(--gold-1),var(--gold-2));
-    color:#241900; font-weight:800; font-size:13px;
-    padding:9px 16px; border-radius:11px; border:none; cursor:pointer;
-  }
+  main{padding:26px 30px; overflow-y:auto; max-height:100vh;}
+  .page-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:22px;}
+  .page-head h1{font-size:19px; font-weight:800;}
+  .page-head p{font-size:12px; color:var(--text-2); margin-top:3px;}
 
-  /* ---------- SECTION LABEL ---------- */
-  .sec-title{
-    display:flex; align-items:center; justify-content:space-between;
-    margin:22px 0 12px;
-  }
-  .sec-title h2{font-size:14.5px; font-weight:800;}
-  .sec-title .more{font-size:11.5px; color:var(--text-2); font-weight:600;}
+  /* ---------- CARDS / STATS ---------- */
+  .stat-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px;}
+  .stat-card{background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:17px 18px;}
+  .stat-card .l{font-size:11px; color:var(--text-2); font-weight:600; margin-bottom:8px;}
+  .stat-card .v{font-size:21px; font-weight:900;}
+  .stat-card .v.gold{color:var(--gold-1);}
+  .stat-card .v.violet{color:var(--violet);}
+  .panel{background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:18px; margin-bottom:20px;}
+  .panel-title{font-size:13.5px; font-weight:800; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center;}
 
-  /* ---------- CATEGORY CHIPS ---------- */
-  .chips{display:flex; gap:8px; overflow-x:auto; padding-bottom:4px; margin-bottom:4px; scrollbar-width:none;}
-  .chips::-webkit-scrollbar{display:none;}
-  .chip{
-    flex-shrink:0; padding:8px 15px; border-radius:999px; font-size:12.5px; font-weight:700;
-    background:var(--surface-2); color:var(--text-1); border:1px solid var(--border); cursor:pointer;
-    white-space:nowrap; transition:.15s;
-  }
-  .chip.active{background:linear-gradient(135deg,var(--violet),var(--violet-2)); color:#fff; border-color:transparent;}
+  /* simple bar chart */
+  .bars{display:flex; align-items:flex-end; gap:6px; height:120px;}
+  .bar-col{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;}
+  .bar{width:100%; border-radius:5px 5px 0 0; background:linear-gradient(180deg,var(--gold-1),var(--gold-2)); min-height:3px;}
+  .bar-col span{font-size:8.5px; color:var(--text-2); margin-top:6px;}
 
-  /* ---------- PRODUCT GRID ---------- */
-  .grid{display:grid; grid-template-columns:1fr 1fr; gap:11px; margin-top:14px;}
-  .pcard{
-    background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md);
-    padding:13px 12px; display:flex; flex-direction:column; gap:8px;
-    transition:.15s; cursor:pointer; position:relative;
-  }
-  .pcard:active{transform:scale(.97);}
-  .pcard .picon{
-    width:38px; height:38px; border-radius:10px; display:flex; align-items:center; justify-content:center;
-    font-size:19px; background:var(--surface-3);
-  }
-  .pcard .pname{font-size:13px; font-weight:700; line-height:1.4;}
-  .pcard .pdesc{font-size:10.5px; color:var(--text-2); line-height:1.5; min-height:26px;}
-  .pcard .prow{display:flex; align-items:center; justify-content:space-between; margin-top:2px;}
-  .pcard .price{font-size:12.5px; font-weight:800; color:var(--gold-1);}
-  .pcard .price small{font-size:9.5px; color:var(--text-2); font-weight:500;}
-  .addbtn{
-    width:28px; height:28px; border-radius:9px; border:none; cursor:pointer;
-    background:var(--violet); color:#fff; font-size:16px; font-weight:700;
-    display:flex; align-items:center; justify-content:center;
-  }
-  .badge{
-    position:absolute; top:9px; left:9px; font-size:9px; font-weight:800;
-    background:rgba(51,217,152,.15); color:var(--success); padding:2px 7px; border-radius:6px;
-  }
+  /* ---------- TABLE ---------- */
+  table{width:100%; border-collapse:collapse; font-size:12.5px;}
+  th{text-align:right; color:var(--text-2); font-weight:700; font-size:11px; padding:10px 12px; border-bottom:1px solid var(--border);}
+  td{padding:11px 12px; border-bottom:1px solid var(--border); color:var(--text-0);}
+  tr:last-child td{border-bottom:none;}
+  tr.clickable{cursor:pointer;}
+  tr.clickable:hover td{background:var(--surface-2);}
+  .pill{display:inline-block; padding:3px 10px; border-radius:999px; font-size:10px; font-weight:800;}
+  .pill.paid, .pill.delivered, .pill.active{background:rgba(51,217,152,.13); color:var(--success);}
+  .pill.pending{background:rgba(255,182,72,.13); color:var(--warn);}
+  .pill.failed{background:rgba(255,107,122,.13); color:var(--danger);}
+  .mono{direction:ltr; text-align:right; font-variant-numeric:tabular-nums;}
+  .toolbar{display:flex; gap:10px; margin-bottom:16px; align-items:center;}
+  .toolbar input, .toolbar select{width:auto; min-width:180px;}
+  .empty-row td{text-align:center; color:var(--text-2); padding:30px;}
 
-  /* ---------- FLOATING CART ---------- */
-  .fab-cart{
-    position:fixed; bottom:88px; left:50%; transform:translateX(-50%);
-    z-index:35; display:none; align-items:center; gap:10px;
-    background:linear-gradient(135deg,var(--violet),var(--violet-2));
-    color:#fff; padding:12px 20px; border-radius:16px; border:none; cursor:pointer;
-    box-shadow:0 10px 30px rgba(92,78,224,.45); font-family:inherit;
-    max-width:390px; width:calc(100% - 32px); justify-content:space-between;
-  }
-  .fab-cart.show{display:flex;}
-  .fab-cart .l{font-size:12.5px; font-weight:700;}
-  .fab-cart .r{font-size:13px; font-weight:800;}
-
-  /* ---------- BOTTOM NAV ---------- */
-  nav.tabbar{
-    position:fixed; bottom:0; left:50%; transform:translateX(-50%);
-    width:100%; max-width:430px;
-    display:flex; justify-content:space-around; align-items:center;
-    background:rgba(15,16,26,.92); backdrop-filter:blur(16px);
-    border-top:1px solid var(--border); padding:9px 6px 12px; z-index:40;
-  }
-  .tab{
-    display:flex; flex-direction:column; align-items:center; gap:3px;
-    background:none; border:none; color:var(--text-2); font-family:inherit;
-    font-size:10.5px; font-weight:600; cursor:pointer; padding:4px 14px; position:relative;
-  }
-  .tab svg{width:21px; height:21px; stroke:var(--text-2); fill:none; stroke-width:1.8;}
-  .tab.active{color:var(--text-0);}
-  .tab.active svg{stroke:var(--gold-1);}
-  .tab .dot{position:absolute; top:-1px; left:22px; width:7px; height:7px; border-radius:50%; background:var(--danger); display:none;}
-  .tab .dot.show{display:block;}
-
-  /* ---------- WALLET PAGE ---------- */
-  .balance-card{
-    position:relative; overflow:hidden; border-radius:var(--radius-lg);
-    padding:22px 20px; margin-bottom:16px;
-    background:linear-gradient(160deg,#1b1c30,#111225 75%);
-    border:1px solid var(--border);
-  }
-  .balance-card .stars-field{
-    position:absolute; inset:0; opacity:.5; pointer-events:none;
-  }
-  .balance-card .stars-field span{
-    position:absolute; color:var(--gold-1); opacity:.5; font-size:10px;
-  }
-  .balance-card .row{position:relative; display:flex; justify-content:space-between; align-items:flex-end;}
-  .balance-card .label{font-size:11px; color:var(--text-2); font-weight:600; margin-bottom:6px;}
-  .balance-card .big{font-size:25px; font-weight:900; letter-spacing:.3px;}
-  .balance-card .unit{font-size:12px; color:var(--text-1); font-weight:600; margin-right:4px;}
-  .balance-card .stars-amt{display:flex; align-items:center; gap:5px; font-size:17px; font-weight:800; color:var(--gold-1);}
-  .balance-card .divider{height:1px; background:var(--border); margin:16px 0 14px; position:relative;}
-  .wallet-actions{display:flex; gap:10px; margin-bottom:22px;}
-  .wbtn{
-    flex:1; padding:12px; border-radius:13px; border:1px solid var(--border);
-    background:var(--surface-2); color:var(--text-0); font-family:inherit;
-    font-size:12.5px; font-weight:700; display:flex; flex-direction:column; align-items:center; gap:6px; cursor:pointer;
-  }
-  .wbtn.primary{background:linear-gradient(135deg,var(--gold-1),var(--gold-2)); color:#241900; border:none;}
-  .tx-item{
-    display:flex; align-items:center; gap:12px; padding:12px 0; border-bottom:1px solid var(--border);
-  }
-  .tx-icon{width:36px; height:36px; border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:16px; flex-shrink:0;}
-  .tx-icon.in{background:rgba(51,217,152,.13); color:var(--success);}
-  .tx-icon.out{background:rgba(255,107,122,.13); color:var(--danger);}
-  .tx-mid{flex:1; min-width:0;}
-  .tx-mid .t1{font-size:12.5px; font-weight:700;}
-  .tx-mid .t2{font-size:10.5px; color:var(--text-2); margin-top:2px;}
-  .tx-amt{font-size:12.5px; font-weight:800; white-space:nowrap;}
-  .tx-amt.in{color:var(--success);}
-  .tx-amt.out{color:var(--danger);}
-
-  /* ---------- REFERRAL PAGE ---------- */
-  .ref-hero{
-    border-radius:var(--radius-lg); padding:20px 18px; margin-bottom:16px;
-    background:linear-gradient(135deg,rgba(124,108,255,.18),rgba(124,108,255,.03));
-    border:1px solid var(--border);
-  }
-  .ref-hero h2{font-size:16px; font-weight:800; margin-bottom:6px;}
-  .ref-hero p{font-size:12px; color:var(--text-1); line-height:1.8; margin-bottom:14px;}
-  .link-box{
-    display:flex; align-items:center; gap:8px; background:var(--surface-2);
-    border:1px dashed var(--border); border-radius:12px; padding:11px 12px;
-  }
-  .link-box span{flex:1; font-size:11.5px; color:var(--text-1); direction:ltr; text-align:right; overflow:hidden; text-overflow:ellipsis; white-space:nowrap;}
-  .copy-btn{
-    background:var(--violet); color:#fff; border:none; border-radius:9px; font-family:inherit;
-    padding:7px 12px; font-size:11.5px; font-weight:700; cursor:pointer; flex-shrink:0;
-  }
-  .stat-row{display:flex; gap:10px; margin:14px 0 18px;}
-  .stat-box{flex:1; background:var(--surface); border:1px solid var(--border); border-radius:13px; padding:13px; text-align:center;}
-  .stat-box b{display:block; font-size:18px; font-weight:900; color:var(--gold-1);}
-  .stat-box span{font-size:10.5px; color:var(--text-2); font-weight:600;}
-  .invite-item{display:flex; align-items:center; gap:11px; padding:11px 0; border-bottom:1px solid var(--border);}
-  .invite-avatar{
-    width:36px; height:36px; border-radius:50%; background:var(--surface-3);
-    display:flex; align-items:center; justify-content:center; font-size:13px; font-weight:800; flex-shrink:0;
-  }
-  .invite-mid{flex:1;}
-  .invite-mid .n1{font-size:12.5px; font-weight:700;}
-  .invite-mid .n2{font-size:10.5px; color:var(--text-2); margin-top:2px;}
-  .invite-status{font-size:10px; font-weight:700; padding:3px 9px; border-radius:999px;}
-  .invite-status.active{background:rgba(51,217,152,.13); color:var(--success);}
-  .invite-status.pending{background:rgba(170,176,209,.13); color:var(--text-2);}
-
-  /* ---------- PROFILE PAGE ---------- */
-  .profile-head{display:flex; align-items:center; gap:13px; margin-bottom:20px;}
-  .profile-avatar{
-    width:56px; height:56px; border-radius:16px;
-    background:linear-gradient(150deg,var(--violet),var(--violet-2));
-    display:flex; align-items:center; justify-content:center; font-size:22px; font-weight:800;
-  }
-  .profile-head b{font-size:15.5px; font-weight:800; display:block;}
-  .profile-head span{font-size:11.5px; color:var(--text-2);}
-  .list-card{background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); overflow:hidden; margin-bottom:16px;}
-  .list-row{
-    display:flex; align-items:center; gap:12px; padding:13px 15px; border-bottom:1px solid var(--border);
-    cursor:pointer;
-  }
-  .list-row:last-child{border-bottom:none;}
-  .list-row .li-icon{width:32px; height:32px; border-radius:9px; background:var(--surface-3); display:flex; align-items:center; justify-content:center; font-size:15px;}
-  .list-row .li-text{flex:1; font-size:12.5px; font-weight:600;}
-  .list-row .li-sub{font-size:10.5px; color:var(--text-2);}
-  .list-row .chev{color:var(--text-2); font-size:14px;}
-  .order-item{display:flex; align-items:center; gap:12px; padding:12px 15px; border-bottom:1px solid var(--border);}
-  .order-item:last-child{border-bottom:none;}
-  .order-item .oi{width:34px; height:34px; border-radius:9px; background:var(--surface-3); display:flex; align-items:center; justify-content:center; font-size:15px;}
-  .order-item .om{flex:1;}
-  .order-item .om .t1{font-size:12px; font-weight:700;}
-  .order-item .om .t2{font-size:10px; color:var(--text-2); margin-top:2px;}
-  .order-stat{font-size:9.5px; font-weight:800; padding:3px 8px; border-radius:7px; background:rgba(51,217,152,.13); color:var(--success);}
-
-  /* ---------- SHEET / MODAL ---------- */
-  .overlay{
-    position:fixed; inset:0; background:rgba(4,4,10,.6); backdrop-filter:blur(2px);
-    z-index:60; display:none; align-items:flex-end; justify-content:center;
-  }
+  /* ---------- MODAL ---------- */
+  .overlay{position:fixed; inset:0; background:rgba(4,4,10,.65); backdrop-filter:blur(2px); z-index:60; display:none; align-items:center; justify-content:center;}
   .overlay.show{display:flex;}
-  .sheet{
-    width:100%; max-width:430px; background:var(--bg-1); border-radius:22px 22px 0 0;
-    padding:10px 18px 26px; max-height:86vh; overflow-y:auto; border:1px solid var(--border); border-bottom:none;
-    transform:translateY(100%); transition:transform .28s cubic-bezier(.2,.9,.3,1);
-  }
-  .overlay.show .sheet{transform:translateY(0);}
-  .sheet-handle{width:38px; height:4px; background:var(--surface-3); border-radius:99px; margin:6px auto 14px;}
-  .sheet-title{font-size:15.5px; font-weight:800; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center;}
-  .sheet-title .x{color:var(--text-2); font-size:18px; cursor:pointer;}
+  .modal{width:420px; max-width:92vw; max-height:86vh; overflow-y:auto; background:var(--bg-1); border:1px solid var(--border); border-radius:18px; padding:22px;}
+  .modal-title{font-size:15px; font-weight:800; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center;}
+  .modal-title .x{cursor:pointer; color:var(--text-2); font-size:17px;}
+  .kv{display:flex; justify-content:space-between; font-size:12px; padding:8px 0; border-bottom:1px solid var(--border);}
+  .kv b{color:var(--text-0);}
+  .kv span{color:var(--text-2);}
 
-  .cart-row{display:flex; align-items:center; gap:11px; padding:11px 0; border-bottom:1px solid var(--border);}
-  .cart-row .ci{width:38px; height:38px; border-radius:10px; background:var(--surface-2); display:flex; align-items:center; justify-content:center; font-size:17px;}
-  .cart-row .cm{flex:1;}
-  .cart-row .cm .n{font-size:12.5px; font-weight:700;}
-  .cart-row .cm .p{font-size:11px; color:var(--text-2); margin-top:2px;}
-  .qty{display:flex; align-items:center; gap:9px; background:var(--surface-2); border-radius:9px; padding:4px 8px;}
-  .qty button{background:none; border:none; color:var(--text-0); font-size:15px; width:20px; cursor:pointer; font-family:inherit;}
-  .qty span{font-size:12px; font-weight:700; min-width:14px; text-align:center;}
-
-  .sum-row{display:flex; justify-content:space-between; font-size:12.5px; color:var(--text-1); padding:6px 0;}
-  .sum-row.total{font-size:14.5px; font-weight:800; color:var(--text-0); padding-top:12px; border-top:1px solid var(--border); margin-top:8px;}
-  .sum-row.total b{color:var(--gold-1);}
-
-  .pay-option{
-    display:flex; align-items:center; gap:12px; padding:13px 14px; border-radius:13px;
-    border:1.5px solid var(--border); margin-bottom:10px; cursor:pointer; background:var(--surface);
-  }
-  .pay-option.sel{border-color:var(--violet); background:rgba(124,108,255,.08);}
-  .pay-option .pi{font-size:18px;}
-  .pay-option .pt{flex:1;}
-  .pay-option .pt .n{font-size:12.5px; font-weight:700;}
-  .pay-option .pt .s{font-size:10.5px; color:var(--text-2); margin-top:2px;}
-  .radio{width:18px; height:18px; border-radius:50%; border:2px solid var(--border); flex-shrink:0; position:relative;}
-  .pay-option.sel .radio{border-color:var(--violet);}
-  .pay-option.sel .radio:after{content:""; position:absolute; inset:3px; background:var(--violet); border-radius:50%;}
-
-  .amt-chips{display:flex; gap:8px; flex-wrap:wrap; margin-bottom:14px;}
-  .amt-chip{padding:9px 14px; border-radius:11px; background:var(--surface-2); border:1.5px solid var(--border); font-size:12px; font-weight:700; cursor:pointer;}
-  .amt-chip.sel{border-color:var(--gold-2); background:rgba(244,180,0,.1); color:var(--gold-1);}
-  .input-box{
-    width:100%; background:var(--surface-2); border:1px solid var(--border); border-radius:12px;
-    padding:13px 14px; color:var(--text-0); font-family:inherit; font-size:13px; margin-bottom:14px;
-  }
-  .input-box::placeholder{color:var(--text-2);}
-
-  .btn-main{
-    width:100%; padding:14px; border-radius:14px; border:none; cursor:pointer; font-family:inherit;
-    background:linear-gradient(135deg,var(--gold-1),var(--gold-2)); color:#241900;
-    font-size:14px; font-weight:800; margin-top:6px;
-  }
-  .btn-main:disabled{opacity:.4; cursor:not-allowed;}
-  .btn-ghost{
-    width:100%; padding:13px; border-radius:14px; cursor:pointer; font-family:inherit;
-    background:transparent; border:1px solid var(--border); color:var(--text-1); font-size:12.5px; font-weight:700; margin-top:9px;
-  }
-
-  .empty{text-align:center; padding:40px 10px; color:var(--text-2);}
-  .empty .e-icon{font-size:34px; margin-bottom:10px;}
-  .empty p{font-size:12.5px;}
-
-  /* ---------- TOAST ---------- */
   #toast{
-    position:fixed; bottom:100px; left:50%; transform:translateX(-50%) translateY(20px);
-    background:var(--surface-3); border:1px solid var(--border); color:var(--text-0);
-    padding:11px 18px; border-radius:12px; font-size:12.5px; font-weight:700; z-index:80;
-    opacity:0; pointer-events:none; transition:.25s; display:flex; align-items:center; gap:8px;
-    max-width:88%; box-shadow:0 10px 30px rgba(0,0,0,.4);
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px); z-index:90;
+    background:var(--surface-3); border:1px solid var(--border); padding:12px 20px; border-radius:11px;
+    font-size:12.5px; font-weight:700; opacity:0; pointer-events:none; transition:.25s;
   }
   #toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+  @media (max-width:900px){
+    #shell.show{grid-template-columns:1fr;}
+    aside{display:none;}
+    .stat-grid{grid-template-columns:repeat(2,1fr);}
+  }
 </style>
 </head>
 <body>
-<div id="app">
 
-  <header class="topbar">
+<!-- ===================== LOGIN ===================== -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-mark">🔐</div>
+    <h1>ورود به پنل مدیریت</h1>
+    <p>استارکده — مدیریت فروشگاه، کیف‌پول و رفرال</p>
+    <div class="field">
+      <label>رمز عبور ادمین</label>
+      <input type="password" id="pw-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="btn" onclick="doLogin()">ورود</button>
+    <div class="error-text" id="login-err">رمز عبور اشتباه است</div>
+  </div>
+</div>
+
+<!-- ===================== SHELL ===================== -->
+<div id="shell">
+  <aside>
     <div class="brand">
-      <div class="brand-mark">✦</div>
-      <div class="brand-text">
-        <b>استارکده</b>
-        <span>فروشگاه استارز و گیفت‌کارت</span>
-      </div>
+      <div class="m">✦</div>
+      <div><b>استارکده</b><span>پنل مدیریت</span></div>
     </div>
-    <div class="wallet-chip" onclick="goTo('wallet')">
-      <span class="amt gold">⭐️ <span id="hdr-stars">0</span></span>
-      <span style="color:var(--border)">|</span>
-      <span class="amt" id="hdr-rial">۰ ت</span>
-    </div>
-  </header>
+    <div class="nav-item active" data-p="dashboard" onclick="go('dashboard')"><span class="ic">📊</span> داشبورد</div>
+    <div class="nav-item" data-p="users" onclick="go('users')"><span class="ic">👥</span> کاربران</div>
+    <div class="nav-item" data-p="orders" onclick="go('orders')"><span class="ic">🧾</span> سفارش‌ها</div>
+    <div class="nav-item" data-p="products" onclick="go('products')"><span class="ic">📦</span> محصولات</div>
+    <div class="nav-item" data-p="transactions" onclick="go('transactions')"><span class="ic">💳</span> تراکنش‌ها</div>
+    <div class="nav-item" data-p="cardtopups" onclick="go('cardtopups')"><span class="ic">🏦</span> کارت به کارت<span id="cardtopup-badge" style="display:none; margin-right:auto; background:var(--danger); color:#fff; font-size:9.5px; font-weight:800; border-radius:999px; padding:1px 6px;"></span></div>
+    <div class="nav-item" data-p="market" onclick="go('market')"><span class="ic">🎁</span> بازار گیفت</div>
+    <div class="nav-item" data-p="referrals" onclick="go('referrals')"><span class="ic">🤝</span> رفرال‌ها</div>
+    <div class="nav-item" data-p="tasks" onclick="go('tasks')"><span class="ic">🎯</span> تسک‌ها</div>
+    <button class="btn secondary logout-btn" onclick="logout()">خروج از حساب</button>
+  </aside>
 
-  <main>
-
-    <!-- ============ HOME ============ -->
-    <section class="page active" id="page-home">
-      <div class="hero">
-        <h1>استارز تلگرام رو فوری شارژ کن ✨</h1>
-        <p>خرید آنی استارز، پرمیوم تلگرام و گیفت‌کارت با پرداخت ریالی یا استارز، بدون نیاز به فیلترشکن</p>
-        <button class="hero-cta" onclick="setCategory('stars')">⭐️ مشاهده پکیج‌های استارز</button>
-      </div>
-
-      <div class="chips" id="cat-chips"></div>
-
-      <div class="grid" id="product-grid"></div>
-    </section>
-
-    <!-- ============ WALLET ============ -->
-    <section class="page" id="page-wallet">
-      <div class="sec-title" style="margin-top:4px;"><h2>کیف پول من</h2></div>
-
-      <div class="balance-card">
-        <div class="stars-field" id="stars-field"></div>
-        <div class="row">
-          <div>
-            <div class="label">موجودی ریالی</div>
-            <div class="big"><span id="wallet-rial">0</span><span class="unit">تومان</span></div>
-          </div>
-          <div style="text-align:left">
-            <div class="label">موجودی استارز</div>
-            <div class="stars-amt">⭐️ <span id="wallet-stars">0</span></div>
-          </div>
-        </div>
-        <div class="divider"></div>
-        <div class="wallet-actions" style="margin:0;">
-          <button class="wbtn primary" onclick="openTopup('rial')"><span>💳</span>شارژ کیف‌پول</button>
-          <button class="wbtn" onclick="openTopup('stars')"><span>⭐️</span>خرید استارز</button>
-        </div>
-      </div>
-
-      <div class="sec-title"><h2>تاریخچه تراکنش‌ها</h2></div>
-      <div id="tx-list"></div>
-    </section>
-
-    <!-- ============ REFERRAL ============ -->
-    <section class="page" id="page-referral">
-      <div class="ref-hero">
-        <h2>دوستاتو دعوت کن، درآمد کسب کن 🤝</h2>
-        <p>به ازای هر خریدی که زیرمجموعه‌های تو انجام میدن، <b style="color:var(--gold-1)">۱۰٪ پورسانت</b> مستقیم به کیف‌پولت اضافه میشه.</p>
-        <div class="link-box">
-          <span id="ref-link">t.me/starkadeh_bot?start=ref_XXXXX</span>
-          <button class="copy-btn" onclick="copyRefLink()">کپی لینک</button>
-        </div>
-      </div>
-
-      <div class="stat-row">
-        <div class="stat-box"><b id="ref-count">0</b><span>نفر دعوت شده</span></div>
-        <div class="stat-box"><b id="ref-earn">0</b><span>درآمد (تومان)</span></div>
-        <div class="stat-box"><b id="ref-percent">۱۰٪</b><span>درصد پورسانت</span></div>
-      </div>
-
-      <button class="btn-main" style="margin-bottom:20px;" onclick="withdrawRef()">برداشت درآمد رفرال به کیف‌پول</button>
-
-      <div class="sec-title"><h2>زیرمجموعه‌های من</h2></div>
-      <div id="ref-list"></div>
-    </section>
-
-    <!-- ============ PROFILE ============ -->
-    <section class="page" id="page-profile">
-      <div class="profile-head">
-        <div class="profile-avatar" id="profile-avatar">؟</div>
-        <div>
-          <b id="profile-name">کاربر مهمان</b>
-          <span id="profile-username">@guest</span>
-        </div>
-      </div>
-
-      <div class="list-card">
-        <div class="list-row" onclick="goTo('wallet')">
-          <div class="li-icon">👛</div>
-          <div class="li-text">کیف پول من</div>
-          <div class="chev">‹</div>
-        </div>
-        <div class="list-row" onclick="goTo('staking')">
-          <div class="li-icon">📈</div>
-          <div class="li-text">استیکینگ (سود موجودی)</div>
-          <div class="chev">‹</div>
-        </div>
-        <div class="list-row" onclick="goTo('tasks')">
-          <div class="li-icon">🎯</div>
-          <div class="li-text">تسک‌ها و جایزه‌ها</div>
-          <div class="chev">‹</div>
-        </div>
-        <div class="list-row" onclick="goTo('referral')">
-          <div class="li-icon">🤝</div>
-          <div class="li-text">زیرمجموعه‌گیری</div>
-          <div class="chev">‹</div>
-        </div>
-        <div class="list-row" onclick="showToast('🎧 پشتیبانی به‌زودی در دسترس است')">
-          <div class="li-icon">🎧</div>
-          <div class="li-text">پشتیبانی آنلاین</div>
-          <div class="chev">‹</div>
-        </div>
-        <div class="list-row" onclick="showToast('ℹ️ نسخه ۱.۰.۰ — استارکده')">
-          <div class="li-icon">ℹ️</div>
-          <div class="li-text">درباره استارکده</div>
-          <div class="chev">‹</div>
-        </div>
-      </div>
-
-      <div class="sec-title"><h2>سفارش‌های اخیر</h2></div>
-      <div class="list-card" id="orders-list"></div>
-    </section>
-
-    <!-- ============ STAKING ============ -->
-    <section class="page" id="page-staking">
-      <div class="sec-title" style="margin-top:4px;"><h2>📈 استیکینگ</h2></div>
-      <div class="hero" style="margin-bottom:16px;">
-        <h1 id="stake-apr-title">سود <span id="stake-apr">۳۸٪</span> سالانه</h1>
-        <p>بخشی از موجودی کیف‌پولت رو قفل کن و به‌صورت خودکار سود دریافت کن. هر وقت خواستی می‌تونی برداشت کنی.</p>
-      </div>
-      <div class="balance-card" style="margin-bottom:16px;">
-        <div class="row">
-          <div>
-            <div class="label">موجودی استیک‌شده</div>
-            <div class="big"><span id="stake-amount">0</span><span class="unit">تومان</span></div>
-          </div>
-          <div style="text-align:left">
-            <div class="label">سود انباشته</div>
-            <div class="stars-amt" style="color:var(--success);" id="stake-pending">0 ت</div>
-          </div>
-        </div>
-        <div class="divider"></div>
-        <div class="wallet-actions" style="margin:0;">
-          <button class="wbtn primary" onclick="openStakeAction('deposit')"><span>➕</span>واریز به استیکینگ</button>
-          <button class="wbtn" onclick="openStakeAction('withdraw')"><span>➖</span>برداشت</button>
-        </div>
-      </div>
-      <div class="panel-note" style="font-size:11px; color:var(--text-2); line-height:1.8;" id="stake-cap-note"></div>
-    </section>
-
-    <!-- ============ TASKS ============ -->
-    <section class="page" id="page-tasks">
-      <div class="sec-title" style="margin-top:4px;"><h2>🎯 تسک‌ها و جایزه‌ها</h2></div>
-      <div id="tasks-list"></div>
-    </section>
-
-    <!-- ============ GAMES ============ -->
-    <section class="page" id="page-games">
-      <div class="sec-title" style="margin-top:4px;"><h2>🎮 بازی‌ها</h2></div>
-      <div class="hero" style="text-align:center; padding:28px 18px;">
-        <div style="font-size:44px; margin-bottom:6px;">🎡</div>
-        <h1 style="margin-bottom:6px;">چرخ شانس روزانه</h1>
-        <p style="margin:0 auto 16px; max-width:100%;">هر ۲۴ ساعت یک‌بار رایگان بچرخون و جایزه‌ی تصادفی (تا ۵۰,۰۰۰ تومان) ببر — بدون شرط‌بندی، بدون ریسک.</p>
-        <button class="hero-cta" id="wheel-btn" onclick="spinWheel()">🎡 چرخوندن</button>
-        <div style="font-size:11px; color:var(--text-2); margin-top:10px;" id="wheel-status"></div>
-      </div>
-
-      <div class="list-card" style="margin-top:16px;">
-        <div class="list-row" onclick="openCommunityLink('channel')">
-          <div class="li-icon">📢</div>
-          <div class="li-text">عضویت در کانال ما</div>
-          <div class="chev">‹</div>
-        </div>
-        <div class="list-row" onclick="openCommunityLink('chat')">
-          <div class="li-icon">💬</div>
-          <div class="li-text">پیوستن به گروه گفتگو</div>
-          <div class="chev">‹</div>
-        </div>
-        <div class="list-row" onclick="goTo('tasks')">
-          <div class="li-icon">🎯</div>
-          <div class="li-text">تسک‌های بیشتر</div>
-          <div class="chev">‹</div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============ MARKET (P2P GIFT) ============ -->
-    <section class="page" id="page-market">
-      <div class="sec-title" style="margin-top:4px;"><h2>🎁 بازار گیفت</h2></div>
-      <div class="hero" style="padding:20px 18px;">
-        <h1 style="font-size:16px;">گیفت پروفایلتو بفروش، یا از بقیه بخر</h1>
-        <p style="margin:0;">آگهی بذار، خریدار با موجودی کیف‌پول پرداخت می‌کنه، تو مستقیم توی تلگرام گیفت رو براش می‌فرستی و بعد از تاییدش پول به کیف‌پولت واریز می‌شه.</p>
-        <button class="hero-cta" style="margin-top:12px;" onclick="openListingForm()">➕ ثبت آگهی فروش گیفت</button>
-      </div>
-
-      <div class="chips" style="margin-top:14px;">
-        <button class="chip market-subtab active" data-mt="browse" onclick="setMarketTab('browse')">🛍 آگهی‌های فعال</button>
-        <button class="chip market-subtab" data-mt="mine" onclick="setMarketTab('mine')">📋 آگهی‌های من</button>
-        <button class="chip market-subtab" data-mt="purchases" onclick="setMarketTab('purchases')">🧾 خریدهای من</button>
-        <button class="chip market-subtab" data-mt="sales" onclick="setMarketTab('sales')">💰 فروش‌های من</button>
-      </div>
-
-      <div id="market-content"><div class="empty"><p>در حال بارگذاری…</p></div></div>
-    </section>
-
-  </main>
-
-  <button class="fab-cart" id="fab-cart" onclick="openCart()">
-    <span class="l">🛒 <span id="fab-count">0</span> کالا در سبد</span>
-    <span class="r"><span id="fab-total">0</span> ت ›</span>
-  </button>
-
-  <nav class="tabbar">
-    <button class="tab active" data-tab="home" onclick="goTo('home')">
-      <svg viewBox="0 0 24 24"><path d="M3 11.5 12 4l9 7.5"/><path d="M5 10v9a1 1 0 0 0 1 1h4v-6h4v6h4a1 1 0 0 0 1-1v-9"/></svg>
-      خانه
-    </button>
-    <button class="tab" data-tab="wallet" onclick="goTo('wallet')">
-      <svg viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><circle cx="16.5" cy="14" r="1.2"/></svg>
-      کیف پول
-    </button>
-    <button class="tab" data-tab="referral" onclick="goTo('referral')">
-      <svg viewBox="0 0 24 24"><circle cx="9" cy="8" r="3"/><path d="M3 20c0-3 2.7-5 6-5s6 2 6 5"/><circle cx="17" cy="7" r="2.3"/><path d="M15.5 15c2.8.3 4.5 2 4.5 5"/></svg>
-      رفرال
-      <span class="dot show" id="ref-dot"></span>
-    </button>
-    <button class="tab" data-tab="games" onclick="goTo('games')">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 3"/></svg>
-      بازی‌ها
-      <span class="dot" id="wheel-dot"></span>
-    </button>
-    <button class="tab" data-tab="market" onclick="goTo('market')">
-      <svg viewBox="0 0 24 24"><path d="M4 8l1.5-4h13L20 8"/><path d="M4 8h16v11a1 1 0 0 1-1 1H5a1 1 0 0 1-1-1V8Z"/><path d="M9 12a3 3 0 0 0 6 0"/></svg>
-      بازار گیفت
-    </button>
-    <button class="tab" data-tab="profile" onclick="goTo('profile')">
-      <svg viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.4"/><path d="M4.5 20c0-4 3.4-6.5 7.5-6.5s7.5 2.5 7.5 6.5"/></svg>
-      پروفایل
-    </button>
-  </nav>
+  <main id="main"></main>
 </div>
 
-<!-- ===== CART SHEET ===== -->
-<div class="overlay" id="overlay-cart" onclick="if(event.target===this) closeSheet('overlay-cart')">
-  <div class="sheet">
-    <div class="sheet-handle"></div>
-    <div class="sheet-title">سبد خرید <span class="x" onclick="closeSheet('overlay-cart')">✕</span></div>
-    <div id="cart-items"></div>
-    <div id="cart-summary"></div>
-    <button class="btn-main" id="checkout-btn" onclick="openCheckout()">ادامه به پرداخت</button>
-  </div>
+<div class="overlay" id="overlay" onclick="if(event.target===this) closeModal()">
+  <div class="modal" id="modal-body"></div>
 </div>
-
-<!-- ===== CHECKOUT SHEET ===== -->
-<div class="overlay" id="overlay-checkout" onclick="if(event.target===this) closeSheet('overlay-checkout')">
-  <div class="sheet">
-    <div class="sheet-handle"></div>
-    <div class="sheet-title">تکمیل پرداخت <span class="x" onclick="closeSheet('overlay-checkout')">✕</span></div>
-    <div id="checkout-summary" style="margin-bottom:16px;"></div>
-    <div style="font-size:12.5px; font-weight:700; margin-bottom:10px; color:var(--text-1);">روش پرداخت را انتخاب کن</div>
-    <div id="pay-options"></div>
-    <button class="btn-main" id="pay-confirm-btn" onclick="confirmPayment()">پرداخت نهایی</button>
-  </div>
-</div>
-
-<!-- ===== TOPUP SHEET ===== -->
-<div class="overlay" id="overlay-topup" onclick="if(event.target===this) closeSheet('overlay-topup')">
-  <div class="sheet">
-    <div class="sheet-handle"></div>
-    <div class="sheet-title" id="topup-title">شارژ کیف‌پول <span class="x" onclick="closeSheet('overlay-topup')">✕</span></div>
-    <div style="font-size:11.5px; color:var(--text-2); margin-bottom:10px; font-weight:600;">مبلغ را انتخاب یا وارد کن</div>
-    <div class="amt-chips" id="topup-chips"></div>
-    <input class="input-box" id="topup-custom" placeholder="مبلغ دلخواه…" inputmode="numeric" oninput="onCustomAmt(this.value)">
-    <div id="topup-method-wrap">
-      <div style="font-size:12.5px; font-weight:700; margin-bottom:10px; color:var(--text-1);">روش شارژ</div>
-      <div class="pay-option sel" data-m="gateway" onclick="selectTopupMethod('gateway')">
-        <div class="pi">🏦</div><div class="pt"><div class="n">درگاه پرداخت بانکی</div><div class="s">اتصال امن به شاپرک</div></div><div class="radio"></div>
-      </div>
-      <div class="pay-option" data-m="card" onclick="selectTopupMethod('card')">
-        <div class="pi">💳</div><div class="pt"><div class="n">کارت‌به‌کارت</div><div class="s">تایید دستی طی چند دقیقه</div></div><div class="radio"></div>
-      </div>
-    </div>
-    <button class="btn-main" id="topup-confirm-btn" onclick="confirmTopup()">پرداخت و شارژ</button>
-  </div>
-</div>
-
-<!-- ===== CARD-TO-CARD TOPUP SHEET ===== -->
-<div class="overlay" id="overlay-cardtopup" onclick="if(event.target===this) closeSheet('overlay-cardtopup')">
-  <div class="sheet">
-    <div class="sheet-handle"></div>
-    <div class="sheet-title">واریز کارت‌به‌کارت <span class="x" onclick="closeSheet('overlay-cardtopup')">✕</span></div>
-    <div id="cardtopup-info" style="background:var(--surface-2); border:1px solid var(--border); border-radius:12px; padding:14px; margin-bottom:14px;"></div>
-    <div style="font-size:11.5px; color:var(--text-2); margin-bottom:10px; font-weight:600;">مبلغ رو به شماره کارت بالا واریز کن، بعد اطلاعات زیر رو وارد کن:</div>
-    <input class="input-box" id="ct-trackcode" placeholder="کد رهگیری / پیگیری تراکنش (اجباری)">
-    <input class="input-box" id="ct-last4" placeholder="۴ رقم آخر کارت مبدأ (اختیاری)" maxlength="4" inputmode="numeric">
-    <input class="input-box" id="ct-note" placeholder="توضیح اضافه (اختیاری)">
-    <button class="btn-main" onclick="submitCardTopup()">ثبت درخواست شارژ</button>
-    <div style="font-size:10.5px; color:var(--text-2); text-align:center; margin-top:10px;">بعد از ثبت، درخواستت رو ادمین بررسی می‌کنه و طی چند دقیقه کیف‌پولت شارژ می‌شه.</div>
-  </div>
-</div>
-
-<!-- ===== NEW MARKET LISTING SHEET ===== -->
-<div class="overlay" id="overlay-listing" onclick="if(event.target===this) closeSheet('overlay-listing')">
-  <div class="sheet">
-    <div class="sheet-handle"></div>
-    <div class="sheet-title">ثبت آگهی فروش گیفت <span class="x" onclick="closeSheet('overlay-listing')">✕</span></div>
-    <input class="input-box" id="lf-title" placeholder="نام گیفت (مثلاً گیفت الماس 💎)">
-    <input class="input-box" id="lf-desc" placeholder="توضیح یا شماره/کد گیفت (اختیاری)">
-    <input class="input-box" id="lf-price" placeholder="قیمت به تومان" inputmode="numeric">
-    <input class="input-box" id="lf-image" placeholder="لینک تصویر گیفت (اختیاری)">
-    <button class="btn-main" onclick="submitListing()">ثبت آگهی</button>
-  </div>
-</div>
-
 <div id="toast"></div>
 
-<!-- ===== STAKE SHEET ===== -->
-<div class="overlay" id="overlay-stake" onclick="if(event.target===this) closeSheet('overlay-stake')">
-  <div class="sheet">
-    <div class="sheet-handle"></div>
-    <div class="sheet-title" id="stake-sheet-title">استیکینگ <span class="x" onclick="closeSheet('overlay-stake')">✕</span></div>
-    <div style="font-size:11.5px; color:var(--text-2); margin-bottom:10px; font-weight:600;" id="stake-sheet-sub"></div>
-    <input class="input-box" id="stake-amount-input" placeholder="مبلغ به تومان…" inputmode="numeric">
-    <button class="btn-main" id="stake-confirm-btn" onclick="confirmStakeAction()">ثبت</button>
-  </div>
-</div>
-
 <script>
-/* ===================== TELEGRAM WEBAPP INIT ===================== */
-const tg = window.Telegram ? window.Telegram.WebApp : null;
-if (tg) { tg.ready(); tg.expand(); try{ tg.setHeaderColor('#0a0b13'); tg.setBackgroundColor('#0a0b13'); }catch(e){} }
-function haptic(type){ try{ tg && tg.HapticFeedback && tg.HapticFeedback.impactOccurred(type||'light'); }catch(e){} }
+const API = '/admin/api';
+let token = localStorage.getItem('starkadeh_admin_token') || null;
+let currentPage = 'dashboard';
 
-/* ===================== API HELPER ===================== */
-// هر درخواست initData تلگرام رو می‌فرسته تا سرور بفهمه کاربر کیه (بدون این هدر، درخواست رد می‌شه)
-async function api(path, opts = {}) {
-  const initData = tg ? tg.initData : '';
-  const res = await fetch(path, {
-    ...opts,
-    headers: {
-      'Content-Type': 'application/json',
-      'X-Init-Data': initData,
-      ...(opts.headers || {}),
-    },
-  });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) {
-    const err = new Error(data.error || 'خطای سرور');
-    if (data.error === 'join_required') { err.joinRequired = true; err.channel = data.channel; }
-    throw err;
-  }
-  return data;
+/* ===================== AUTH ===================== */
+async function doLogin(){
+  const password = document.getElementById('pw-input').value;
+  const res = await fetch(`${API}/login`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({password})});
+  if(!res.ok){ document.getElementById('login-err').style.display='block'; return; }
+  const data = await res.json();
+  token = data.token;
+  localStorage.setItem('starkadeh_admin_token', token);
+  enterShell();
 }
-
-/* ===================== STATE ===================== */
-const state = {
-  page: 'home',
-  category: 'stars',
-  cart: {},               // id -> qty
-  balanceRial: 0,
-  balanceStars: 0,
-  checkoutMethod: 'wallet',
-  topup: { mode: 'rial', amount: 100000, method: 'gateway' },
-  user: { name: 'کاربر مهمان', username: '@guest', id: null },
-  products: [],
-  transactions: [],
-  orders: [],
-  referral: { ref_code: '', invited: [], invited_count: 0, total_earned: 0 },
-};
-
-function fmt(n){ return Number(n||0).toLocaleString('en-US'); }
-
-/* ===================== BOOT ===================== */
-async function boot() {
-  if (!tg || !tg.initData) {
-    document.getElementById('app').innerHTML = `
-      <div style="padding:60px 24px; text-align:center; color:var(--text-1);">
-        <div style="font-size:34px; margin-bottom:14px;">🔒</div>
-        <div style="font-size:14px; font-weight:700; margin-bottom:8px;">این اپلیکیشن فقط داخل تلگرام باز می‌شود</div>
-        <div style="font-size:12px; color:var(--text-2);">لطفاً از دکمه فروشگاه داخل ربات وارد شوید.</div>
-      </div>`;
-    return;
-  }
-  try {
-    const [me, products, config] = await Promise.all([ api('/api/me'), api('/api/products'), fetch('/api/config').then(r=>r.json()).catch(()=>({})) ]);
-    state.user = { name: `${me.first_name||''}`.trim() || 'کاربر تلگرام', username: me.username ? '@'+me.username : '', id: me.tg_id };
-    state.balanceRial = me.balance_rial;
-    state.balanceStars = me.balance_stars;
-    state.products = products;
-    state.config = config;
-    renderChips();
-    renderGrid();
-    updateHeaderChip();
-    updateFab();
-  } catch (e) {
-    if (e.joinRequired) {
-      document.getElementById('app').innerHTML = `
-        <div style="padding:60px 24px; text-align:center; color:var(--text-1);">
-          <div style="font-size:34px; margin-bottom:14px;">📢</div>
-          <div style="font-size:14px; font-weight:700; margin-bottom:8px;">اول عضو کانال ما شو</div>
-          <div style="font-size:12px; color:var(--text-2); margin-bottom:20px;">برای استفاده از فروشگاه باید عضو کانال زیر باشی</div>
-          <button class="hero-cta" style="margin-bottom:10px;" onclick="window.open('https://t.me/${e.channel}','_blank')">📢 عضویت در کانال</button>
-          <br>
-          <button class="btn-ghost" style="max-width:220px; margin:10px auto 0;" onclick="location.reload()">✅ عضو شدم، بررسی کن</button>
-        </div>`;
-      return;
-    }
-    showToast('❌ خطا در اتصال به سرور: ' + e.message);
-  }
+function logout(){
+  fetch(`${API}/logout`, {method:'POST', headers:authHeaders()}).catch(()=>{});
+  localStorage.removeItem('starkadeh_admin_token');
+  token = null;
+  document.getElementById('shell').classList.remove('show');
+  document.getElementById('login-screen').style.display='flex';
 }
-
-/* ===================== CATEGORY CHIPS + GRID (driven by real products) ===================== */
-const categories = [
-  {id:'stars', label:'⭐️ استارز تلگرام'},
-  {id:'premium', label:'💎 پرمیوم تلگرام'},
-  {id:'giftmarket', label:'🎁 مارکت گیفت'},
-  {id:'gift', label:'🛒 گیفت‌کارت'},
-  {id:'service', label:'🛠 خدمات تلگرامی'}
-];
-const categoryIcon = {stars:'⭐️', premium:'💎', gift:'🛒', giftmarket:'🎁', service:'🛠'};
-// این دسته‌ها موقع خرید یک فیلد متنی اجباری (آیدی/یوزرنیم) از خریدار می‌گیرن
-const categoriesNeedingNote = {
-  premium: 'آیدی یا یوزرنیم اکانتی که می‌خوای پرمیوم روش فعال بشه',
-  giftmarket: 'آیدی یا یوزرنیم گیرنده‌ی گیفت',
-};
-
-function renderChips(){
-  document.getElementById('cat-chips').innerHTML = categories.map(c => `
-    <button class="chip ${c.id===state.category?'active':''}" onclick="setCategory('${c.id}')">${c.label}</button>
-  `).join('');
+function authHeaders(){ return {'Content-Type':'application/json', 'Authorization':'Bearer '+token}; }
+function enterShell(){
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('shell').classList.add('show');
+  go('dashboard');
+  refreshCardTopupBadge();
 }
-function setCategory(id){ state.category = id; renderChips(); renderGrid(); haptic('light'); }
-
-function renderGrid(){
-  const wrap = document.getElementById('product-grid');
-  const items = state.products.filter(p => p.category === state.category);
-  if (!items.length) { wrap.innerHTML = `<div class="empty"><div class="e-icon">📭</div><p>فعلاً کالایی در این دسته نیست</p></div>`; return; }
-  wrap.innerHTML = items.map(p => `
-    <div class="pcard" onclick="quickAdd('${p.id}')">
-      ${p.image_url
-        ? `<img src="${p.image_url}" alt="${p.name}" style="width:100%; height:74px; object-fit:cover; border-radius:10px; margin-bottom:2px;" onerror="this.replaceWith(Object.assign(document.createElement('div'),{className:'picon',textContent:'${categoryIcon[p.category]||'🛍'}'}))">`
-        : `<div class="picon">${categoryIcon[p.category]||'🛍'}</div>`}
-      <div class="pname">${p.name}</div>
-      <div class="pdesc">${p.description||''}</div>
-      <div class="prow">
-        <div class="price">${fmt(p.price_rial)}<small> ت</small></div>
-        <button class="addbtn" onclick="event.stopPropagation(); quickAdd('${p.id}')">+</button>
-      </div>
-    </div>
-  `).join('');
+async function api(path, opts={}){
+  const res = await fetch(`${API}${path}`, {...opts, headers:{...authHeaders(), ...(opts.headers||{})}});
+  if(res.status===401){ logout(); throw new Error('unauthorized'); }
+  return res.json();
 }
-function quickAdd(id){
-  state.cart[id] = (state.cart[id]||0) + 1;
-  updateFab();
-  haptic('medium');
-  showToast('✅ به سبد خرید اضافه شد');
-}
-function findProduct(id){ return state.products.find(p => p.id === id); }
 
 /* ===================== NAV ===================== */
-function goTo(page){
-  state.page = page;
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.getElementById('page-'+page).classList.add('active');
-  document.querySelectorAll('.tab').forEach(t=>t.classList.toggle('active', t.dataset.tab===page));
-  if(page==='wallet') renderWallet();
-  if(page==='referral') renderReferral();
-  if(page==='profile') renderProfile();
-  if(page==='staking') renderStaking();
-  if(page==='tasks') renderTasksPage();
-  if(page==='games') renderGames();
-  if(page==='market') renderMarketTab();
-  window.scrollTo(0,0);
-  haptic('light');
+function go(page){
+  currentPage = page;
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active', n.dataset.p===page));
+  const renderers = {dashboard:renderDashboard, users:renderUsers, orders:renderOrders, products:renderProducts, transactions:renderTransactions, cardtopups:renderCardTopups, market:renderMarket, referrals:renderReferrals, tasks:renderTasks};
+  renderers[page]();
 }
 
-/* ===================== FAB CART ===================== */
-function cartCount(){ return Object.values(state.cart).reduce((a,b)=>a+b,0); }
-function cartTotalRial(){
-  return Object.entries(state.cart).reduce((sum,[id,qty])=>{
-    const p = findProduct(id);
-    return sum + (p? p.price_rial*qty : 0);
-  },0);
+/* ===================== HELPERS ===================== */
+function fmt(n){ return Number(n||0).toLocaleString('en-US'); }
+function toast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 2200);
 }
-function updateFab(){
-  const c = cartCount();
-  document.getElementById('fab-cart').classList.toggle('show', c>0);
-  document.getElementById('fab-count').textContent = c;
-  document.getElementById('fab-total').textContent = fmt(cartTotalRial());
-}
+function openModal(html){ document.getElementById('modal-body').innerHTML = html; document.getElementById('overlay').classList.add('show'); }
+function closeModal(){ document.getElementById('overlay').classList.remove('show'); }
+function statusLabel(s){ return {pending:'در انتظار', paid:'پرداخت‌شده', delivered:'تحویل‌شده', failed:'ناموفق'}[s] || s; }
 
-/* ===================== CART SHEET ===================== */
-function openCart(){
-  const wrap = document.getElementById('cart-items');
-  const entries = Object.entries(state.cart);
-  if(!entries.length){
-    wrap.innerHTML = `<div class="empty"><div class="e-icon">🛒</div><p>سبد خریدت خالیه</p></div>`;
-  } else {
-    wrap.innerHTML = entries.map(([id,qty])=>{
-      const p = findProduct(id);
-      return `
-      <div class="cart-row">
-        <div class="ci">${categoryIcon[p.category]||'🛍'}</div>
-        <div class="cm"><div class="n">${p.name}</div><div class="p">${fmt(p.price_rial)} ت</div></div>
-        <div class="qty">
-          <button onclick="changeQty('${id}',-1)">−</button>
-          <span>${qty}</span>
-          <button onclick="changeQty('${id}',1)">+</button>
-        </div>
-      </div>`;
-    }).join('');
-  }
-  const total = cartTotalRial();
-  document.getElementById('cart-summary').innerHTML = entries.length ? `
-    <div class="sum-row"><span>جمع کل</span><span>${fmt(total)} تومان</span></div>
-    <div class="sum-row total"><span>قابل پرداخت</span><b>${fmt(total)} ت</b></div>
-  ` : '';
-  document.getElementById('checkout-btn').style.display = entries.length ? 'block':'none';
-  openSheet('overlay-cart');
-}
-function changeQty(id, delta){
-  state.cart[id] = (state.cart[id]||0) + delta;
-  if(state.cart[id] <= 0) delete state.cart[id];
-  updateFab();
-  openCart();
-  haptic('light');
-}
-
-/* ===================== SHEET HELPERS ===================== */
-function openSheet(id){ document.getElementById(id).classList.add('show'); }
-function closeSheet(id){ document.getElementById(id).classList.remove('show'); }
-
-/* ===================== CHECKOUT ===================== */
-function cartItemsPayload(){
-  return Object.entries(state.cart).map(([productId, qty]) => ({ productId, qty }));
-}
-function openCheckout(){
-  closeSheet('overlay-cart');
-  const total = cartTotalRial();
-  const starsEquiv = Math.ceil(total / 385);
-
-  // اگه تو سبد محصولی از دسته‌ی پرمیوم یا مارکت گیفت باشه، باید آیدی/یوزرنیم مقصد رو بگیریم
-  const neededNoteLabel = Object.keys(state.cart)
-    .map(id => findProduct(id)?.category)
-    .map(cat => categoriesNeedingNote[cat])
-    .find(Boolean);
-
-  document.getElementById('checkout-summary').innerHTML = `
-    <div class="sum-row"><span>تعداد اقلام</span><span>${cartCount()} کالا</span></div>
-    <div class="sum-row total"><span>مبلغ قابل پرداخت</span><b>${fmt(total)} ت</b></div>
-    ${neededNoteLabel ? `
-      <div style="margin-top:14px;">
-        <label style="font-size:11.5px; color:var(--text-1); font-weight:600; display:block; margin-bottom:6px;">${neededNoteLabel}</label>
-        <input id="checkout-note" class="input-box" placeholder="مثلاً @username یا آیدی عددی" style="margin-bottom:0;">
-      </div>` : ''}
-  `;
-  state.checkoutMethod = 'wallet';
-  renderPayOptions(total, starsEquiv);
-  setTimeout(()=>openSheet('overlay-checkout'), 180);
-}
-function renderPayOptions(total, starsEquiv){
-  const opts = [
-    {id:'wallet', icon:'👛', title:'موجودی کیف‌پول', sub:`موجودی فعلی: ${fmt(state.balanceRial)} تومان`, disabled: state.balanceRial < total},
-    {id:'stars', icon:'⭐️', title:'پرداخت با استارز تلگرام', sub:`معادل تقریبی ${fmt(starsEquiv)}⭐️`, disabled:false},
-    {id:'gateway', icon:'🏦', title:'درگاه پرداخت آنلاین', sub:'پرداخت مستقیم ریالی، بدون نیاز به موجودی', disabled:false}
-  ];
-  document.getElementById('pay-options').innerHTML = opts.map(o=>`
-    <div class="pay-option ${state.checkoutMethod===o.id?'sel':''}" style="${o.disabled?'opacity:.45':''}" onclick="${o.disabled?'':`selectPayMethod('${o.id}')`}">
-      <div class="pi">${o.icon}</div>
-      <div class="pt"><div class="n">${o.title}</div><div class="s">${o.sub}${o.disabled?' — کافی نیست':''}</div></div>
-      <div class="radio"></div>
+/* ===================== DASHBOARD ===================== */
+async function renderDashboard(){
+  const m = document.getElementById('main');
+  m.innerHTML = `<div class="page-head"><div><h1>داشبورد</h1><p>نمای کلی فروش و فعالیت کاربران</p></div></div><div id="dash-body">در حال بارگذاری…</div>`;
+  const s = await api('/stats');
+  const maxRev = Math.max(1, ...s.revenueByDay.map(d=>d.total));
+  document.getElementById('dash-body').innerHTML = `
+    <div class="stat-grid">
+      <div class="stat-card"><div class="l">تعداد کاربران</div><div class="v">${fmt(s.users)}</div></div>
+      <div class="stat-card"><div class="l">سفارش‌های امروز</div><div class="v violet">${fmt(s.todayOrders)}</div></div>
+      <div class="stat-card"><div class="l">مجموع واریزی ریالی</div><div class="v gold">${fmt(s.rialIn)} ت</div></div>
+      <div class="stat-card"><div class="l">استارز فروخته‌شده</div><div class="v gold">⭐️ ${fmt(s.starsIn)}</div></div>
     </div>
-  `).join('');
-}
-function selectPayMethod(id){
-  state.checkoutMethod = id;
-  renderPayOptions(cartTotalRial(), Math.ceil(cartTotalRial()/385));
-  haptic('light');
-}
-function getCheckoutNote(){
-  const el = document.getElementById('checkout-note');
-  if (!el) return null;
-  const val = el.value.trim();
-  if (!val) { el.style.borderColor = 'var(--danger)'; el.focus(); return undefined; } // undefined = نامعتبر
-  return val;
-}
-async function confirmPayment(){
-  const items = cartItemsPayload();
-  const needsNote = !!document.getElementById('checkout-note');
-  const note = needsNote ? getCheckoutNote() : null;
-  if (needsNote && note === undefined) { showToast('❌ لطفاً آیدی/یوزرنیم مقصد رو وارد کن'); return; }
-
-  try {
-    if (state.checkoutMethod === 'wallet') {
-      await api('/api/checkout/wallet', { method:'POST', body: JSON.stringify({ items, note }) });
-      state.cart = {};
-      await refreshMe();
-      closeSheet('overlay-checkout');
-      haptic('heavy');
-      showToast('🎉 پرداخت با موفقیت انجام شد');
-    } else if (state.checkoutMethod === 'stars') {
-      const { invoiceLink } = await api('/api/checkout/stars-invoice', { method:'POST', body: JSON.stringify({ items, note }) });
-      closeSheet('overlay-checkout');
-      if (tg && tg.openInvoice) {
-        tg.openInvoice(invoiceLink, async (status) => {
-          if (status === 'paid') {
-            state.cart = {};
-            await refreshMe();
-            haptic('heavy');
-            showToast('🎉 پرداخت با استارز موفق بود');
-          } else if (status === 'failed') {
-            showToast('❌ پرداخت ناموفق بود');
-          }
-        });
-      } else {
-        window.open(invoiceLink, '_blank');
-      }
-    } else { // gateway
-      const { payUrl } = await api('/api/gateway/start', { method:'POST', body: JSON.stringify({ purpose:'order', items, note }) });
-      closeSheet('overlay-checkout');
-      if (tg && tg.openLink) tg.openLink(payUrl); else window.open(payUrl, '_blank');
-    }
-  } catch (e) {
-    showToast('❌ ' + e.message);
-  }
-}
-
-/* ===================== TOP UP ===================== */
-function openTopup(mode){
-  state.topup.mode = mode;
-  state.topup.amount = mode==='stars' ? 500 : 100000;
-  document.getElementById('topup-title').innerHTML = (mode==='stars' ? 'خرید استارز' : 'شارژ کیف‌پول') + ' <span class="x" onclick="closeSheet(\'overlay-topup\')">✕</span>';
-  const chips = mode==='stars' ? [100,500,1000,2500] : [50000,100000,300000,500000];
-  document.getElementById('topup-chips').innerHTML = chips.map((v,i)=>`
-    <div class="amt-chip ${i===1?'sel':''}" data-v="${v}" onclick="selectTopupAmt(${v}, this)">${mode==='stars' ? '⭐️ '+fmt(v) : fmt(v)+' ت'}</div>
-  `).join('');
-  document.getElementById('topup-custom').value = '';
-  // استارز فقط با درگاه ریالی قابل خرید است (چون منبع استارز خودتان باید تامین شود)
-  document.getElementById('topup-method-wrap').style.display = mode==='stars' ? 'none' : 'block';
-  selectTopupMethod('gateway');
-  openSheet('overlay-topup');
-}
-function selectTopupAmt(v, el){
-  state.topup.amount = v;
-  document.querySelectorAll('.amt-chip').forEach(c=>c.classList.remove('sel'));
-  el.classList.add('sel');
-  document.getElementById('topup-custom').value = '';
-}
-function onCustomAmt(v){
-  const n = parseInt(v.replace(/[^\d]/g,''))||0;
-  if(n>0){
-    state.topup.amount = n;
-    document.querySelectorAll('.amt-chip').forEach(c=>c.classList.remove('sel'));
-  }
-}
-function selectTopupMethod(m){
-  state.topup.method = m;
-  document.querySelectorAll('#topup-method-wrap .pay-option').forEach(el=>{
-    el.classList.toggle('sel', el.dataset.m===m);
-  });
-}
-async function confirmTopup(){
-  const amt = state.topup.amount;
-  if(!amt || amt<=0){ showToast('❌ لطفاً مبلغ را وارد کن'); return; }
-  const amountRial = state.topup.mode === 'stars' ? amt * 385 : amt;
-
-  // روش کارت‌به‌کارت فقط برای شارژ ریالی کیف‌پول در دسترسه (خرید استارز همیشه از درگاهه)
-  if (state.topup.mode !== 'stars' && state.topup.method === 'card') {
-    closeSheet('overlay-topup');
-    openCardTopupSheet(amountRial);
-    return;
-  }
-
-  try {
-    // شارژ از درگاه: موجودی فقط بعد از تایید واقعی پرداخت در callback سرور اضافه می‌شود، نه همین‌جا.
-    const { payUrl } = await api('/api/gateway/start', { method:'POST', body: JSON.stringify({ purpose:'topup', amountRial }) });
-    closeSheet('overlay-topup');
-    if (tg && tg.openLink) tg.openLink(payUrl); else window.open(payUrl, '_blank');
-    showToast('🔗 در حال انتقال به درگاه پرداخت…');
-  } catch (e) {
-    showToast('❌ ' + e.message);
-  }
-}
-
-/* ===================== CARD-TO-CARD TOPUP ===================== */
-let cardTopupAmount = 0;
-async function openCardTopupSheet(amountRial){
-  cardTopupAmount = amountRial;
-  document.getElementById('ct-trackcode').value = '';
-  document.getElementById('ct-last4').value = '';
-  document.getElementById('ct-note').value = '';
-  document.getElementById('cardtopup-info').innerHTML = `<div style="text-align:center; color:var(--text-2); font-size:12px;">در حال دریافت شماره کارت…</div>`;
-  openSheet('overlay-cardtopup');
-  try {
-    const { cardNumber, cardHolder } = await api('/api/topup/card-info');
-    if (!cardNumber) {
-      document.getElementById('cardtopup-info').innerHTML = `<div style="text-align:center; color:var(--danger); font-size:12px;">شماره کارت هنوز تنظیم نشده، از پشتیبانی بپرس.</div>`;
-      return;
-    }
-    document.getElementById('cardtopup-info').innerHTML = `
-      <div style="font-size:11px; color:var(--text-2); margin-bottom:6px;">مبلغ قابل واریز</div>
-      <div style="font-size:17px; font-weight:900; color:var(--gold-1); margin-bottom:12px;">${fmt(amountRial)} تومان</div>
-      <div style="font-size:11px; color:var(--text-2); margin-bottom:4px;">شماره کارت مقصد</div>
-      <div style="display:flex; align-items:center; justify-content:space-between; gap:8px;">
-        <span style="font-size:15px; font-weight:800; direction:ltr;">${cardNumber}</span>
-        <button class="copy-btn" onclick="navigator.clipboard.writeText('${cardNumber}'); showToast('📋 شماره کارت کپی شد')">کپی</button>
+    <div class="panel">
+      <div class="panel-title">درآمد ۱۴ روز اخیر (تومان)</div>
+      <div class="bars">
+        ${s.revenueByDay.length ? s.revenueByDay.map(d=>`
+          <div class="bar-col">
+            <div class="bar" style="height:${Math.max(4,(d.total/maxRev)*100)}%" title="${fmt(d.total)} ت"></div>
+            <span>${d.d.slice(5)}</span>
+          </div>`).join('') : `<div style="color:var(--text-2); font-size:12px;">هنوز داده‌ای ثبت نشده</div>`}
       </div>
-      ${cardHolder ? `<div style="font-size:11.5px; color:var(--text-1); margin-top:6px;">به نام: ${cardHolder}</div>` : ''}
-    `;
-  } catch (e) {
-    document.getElementById('cardtopup-info').innerHTML = `<div style="text-align:center; color:var(--danger); font-size:12px;">خطا در دریافت اطلاعات کارت</div>`;
+    </div>
+    <div class="panel">
+      <div class="panel-title">پرفروش‌ترین محصولات</div>
+      <table>
+        <thead><tr><th>محصول</th><th>تعداد فروش</th><th>درآمد</th></tr></thead>
+        <tbody>
+          ${s.topProducts.length ? s.topProducts.map(p=>`
+            <tr><td>${p.product_id}</td><td>${fmt(p.sales)}</td><td class="mono">${fmt(p.revenue)} ت</td></tr>
+          `).join('') : `<tr class="empty-row"><td colspan="3">داده‌ای موجود نیست</td></tr>`}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+/* ===================== USERS ===================== */
+async function renderUsers(q=''){
+  const m = document.getElementById('main');
+  m.innerHTML = `
+    <div class="page-head"><div><h1>کاربران</h1><p>لیست کاربران مینی‌اپ و موجودی آن‌ها</p></div></div>
+    <div class="toolbar"><input id="user-search" placeholder="جستجو بر اساس آی‌دی، یوزرنیم یا نام…" value="${q}" oninput="debounceUserSearch(this.value)"></div>
+    <div class="panel" style="padding:0;"><table>
+      <thead><tr><th>کاربر</th><th>آی‌دی تلگرام</th><th>موجودی ریال</th><th>موجودی استارز</th><th>تاریخ عضویت</th></tr></thead>
+      <tbody id="users-tbody"><tr class="empty-row"><td colspan="5">در حال بارگذاری…</td></tr></tbody>
+    </table></div>
+  `;
+  const { rows } = await api(`/users?q=${encodeURIComponent(q)}&limit=100`);
+  document.getElementById('users-tbody').innerHTML = rows.length ? rows.map(u=>`
+    <tr class="clickable" onclick="openUserDetail(${u.tg_id})">
+      <td>${u.first_name || '—'}${u.username ? ' <span style=\"color:var(--text-2)\">@'+u.username+'</span>' : ''}</td>
+      <td class="mono">${u.tg_id}</td>
+      <td class="mono">${fmt(u.balance_rial)} ت</td>
+      <td class="mono">⭐️ ${fmt(u.balance_stars)}</td>
+      <td>${u.created_at?.slice(0,10) || '—'}</td>
+    </tr>
+  `).join('') : `<tr class="empty-row"><td colspan="5">کاربری یافت نشد</td></tr>`;
+}
+let userSearchTimer;
+function debounceUserSearch(v){ clearTimeout(userSearchTimer); userSearchTimer = setTimeout(()=>renderUsers(v), 350); }
+
+async function openUserDetail(tgId){
+  const { user, orders, transactions, referrals } = await api(`/users/${tgId}`);
+  openModal(`
+    <div class="modal-title">${user.first_name || 'کاربر'} ${user.username ? '@'+user.username : ''} <span class="x" onclick="closeModal()">✕</span></div>
+    <div class="kv"><span>موجودی ریالی</span><b class="mono">${fmt(user.balance_rial)} تومان</b></div>
+    <div class="kv"><span>موجودی استارز</span><b class="mono">⭐️ ${fmt(user.balance_stars)}</b></div>
+    <div class="kv"><span>تعداد سفارش‌ها</span><b>${orders.length}</b></div>
+    <div class="kv"><span>تعداد زیرمجموعه</span><b>${referrals.length}</b></div>
+
+    <div style="margin-top:16px; font-size:12.5px; font-weight:800;">اصلاح موجودی</div>
+    <div style="display:flex; gap:8px; margin-top:8px;">
+      <select id="adj-currency" style="max-width:110px;"><option value="rial">ریال</option><option value="stars">استارز</option></select>
+      <input id="adj-amount" type="number" placeholder="مبلغ (منفی = کسر)">
+    </div>
+    <input id="adj-reason" placeholder="دلیل (اختیاری)" style="margin-top:8px;">
+    <button class="btn small" style="width:100%; margin-top:10px;" onclick="adjustBalance(${tgId})">ثبت اصلاح موجودی</button>
+
+    <div style="margin-top:18px; font-size:12.5px; font-weight:800;">آخرین سفارش‌ها</div>
+    <table style="margin-top:8px;"><tbody>
+      ${orders.slice(0,5).map(o=>`<tr><td>${o.product_id} ×${o.qty}</td><td class="mono">${fmt(o.amount_rial)} ت</td><td><span class="pill ${o.status}">${statusLabel(o.status)}</span></td></tr>`).join('') || '<tr class="empty-row"><td colspan="3">سفارشی ثبت نشده</td></tr>'}
+    </tbody></table>
+  `);
+}
+async function adjustBalance(tgId){
+  const currency = document.getElementById('adj-currency').value;
+  const amount = Number(document.getElementById('adj-amount').value);
+  const reason = document.getElementById('adj-reason').value;
+  if(!amount){ toast('❌ مبلغ را وارد کن'); return; }
+  await api(`/users/${tgId}/adjust-balance`, {method:'POST', body:JSON.stringify({currency, amount, reason})});
+  toast('✅ موجودی اصلاح شد');
+  closeModal();
+  renderUsers();
+}
+
+/* ===================== ORDERS ===================== */
+async function renderOrders(status=''){
+  const m = document.getElementById('main');
+  m.innerHTML = `
+    <div class="page-head"><div><h1>سفارش‌ها</h1><p>مدیریت و پیگیری وضعیت سفارش‌ها</p></div></div>
+    <div class="toolbar">
+      <select id="order-filter" onchange="renderOrders(this.value)">
+        <option value="">همه وضعیت‌ها</option>
+        <option value="pending" ${status==='pending'?'selected':''}>در انتظار</option>
+        <option value="paid" ${status==='paid'?'selected':''}>پرداخت‌شده</option>
+        <option value="delivered" ${status==='delivered'?'selected':''}>تحویل‌شده</option>
+        <option value="failed" ${status==='failed'?'selected':''}>ناموفق</option>
+      </select>
+    </div>
+    <div class="panel" style="padding:0;"><table>
+      <thead><tr><th>#</th><th>کاربر</th><th>محصول</th><th>مبلغ</th><th>مقصد / توضیحات</th><th>روش پرداخت</th><th>وضعیت</th><th>تاریخ</th></tr></thead>
+      <tbody id="orders-tbody"><tr class="empty-row"><td colspan="8">در حال بارگذاری…</td></tr></tbody>
+    </table></div>
+  `;
+  const { rows } = await api(`/orders?status=${status}&limit=100`);
+  const methodLabel = {wallet:'کیف‌پول', stars:'استارز', gateway:'درگاه'};
+  document.getElementById('orders-tbody').innerHTML = rows.length ? rows.map(o=>`
+    <tr>
+      <td class="mono">#${o.id}</td>
+      <td>${o.first_name || '—'}${o.username?' @'+o.username:''}</td>
+      <td>${o.product_id} ×${o.qty}</td>
+      <td class="mono">${fmt(o.amount_rial)} ت</td>
+      <td style="color:var(--gold-1); font-weight:700;">${o.note || '—'}</td>
+      <td>${methodLabel[o.pay_method] || o.pay_method}</td>
+      <td>
+        <select onchange="updateOrderStatus(${o.id}, this.value)" style="width:auto; padding:4px 8px; font-size:11px;">
+          ${['pending','paid','delivered','failed'].map(s=>`<option value="${s}" ${s===o.status?'selected':''}>${statusLabel(s)}</option>`).join('')}
+        </select>
+      </td>
+      <td>${o.created_at?.slice(0,16) || '—'}</td>
+    </tr>
+  `).join('') : `<tr class="empty-row"><td colspan="8">سفارشی یافت نشد</td></tr>`;
+}
+async function updateOrderStatus(id, status){
+  await api(`/orders/${id}`, {method:'PATCH', body:JSON.stringify({status})});
+  toast('✅ وضعیت سفارش به‌روزرسانی شد');
+}
+
+/* ===================== PRODUCTS ===================== */
+async function renderProducts(){
+  const m = document.getElementById('main');
+  m.innerHTML = `
+    <div class="page-head">
+      <div><h1>محصولات</h1><p>مدیریت کاتالوگ فروشگاه</p></div>
+      <button class="btn small" onclick="openProductForm()">+ افزودن محصول</button>
+    </div>
+    <div class="panel" style="padding:0;"><table>
+      <thead><tr><th>نام</th><th>دسته</th><th>قیمت</th><th>وضعیت</th><th></th></tr></thead>
+      <tbody id="products-tbody"><tr class="empty-row"><td colspan="5">در حال بارگذاری…</td></tr></tbody>
+    </table></div>
+  `;
+  const rows = await api('/products');
+  document.getElementById('products-tbody').innerHTML = rows.length ? rows.map(p=>`
+    <tr>
+      <td style="display:flex; align-items:center; gap:9px;">
+        ${p.image_url ? `<img src="${p.image_url}" style="width:34px; height:34px; border-radius:8px; object-fit:cover; flex-shrink:0;" onerror="this.style.display='none'">` : `<div style="width:34px; height:34px; border-radius:8px; background:var(--surface-3); flex-shrink:0;"></div>`}
+        <div>${p.name}<div style="color:var(--text-2); font-size:10.5px;">${p.id}</div></div>
+      </td>
+      <td>${p.category}</td>
+      <td class="mono">${fmt(p.price_rial)} ت</td>
+      <td><span class="pill ${p.active? 'active':'failed'}">${p.active?'فعال':'غیرفعال'}</span></td>
+      <td style="display:flex; gap:6px;">
+        <button class="btn secondary small" onclick='openProductForm(${JSON.stringify(p)})'>ویرایش</button>
+        <button class="btn danger small" onclick="deleteProduct('${p.id}')">حذف</button>
+      </td>
+    </tr>
+  `).join('') : `<tr class="empty-row"><td colspan="5">محصولی ثبت نشده</td></tr>`;
+}
+function openProductForm(p=null){
+  openModal(`
+    <div class="modal-title">${p?'ویرایش محصول':'افزودن محصول'} <span class="x" onclick="closeModal()">✕</span></div>
+    <div class="field"><label>شناسه (فقط برای محصول جدید)</label><input id="pf-id" value="${p?.id||''}" ${p?'disabled':''}></div>
+    <div class="field"><label>دسته‌بندی</label>
+      <select id="pf-cat">
+        ${['stars','premium','gift','giftmarket','service'].map(c=>`<option value="${c}" ${p?.category===c?'selected':''}>${c}</option>`).join('')}
+      </select>
+    </div>
+    <div class="field"><label>نام محصول</label><input id="pf-name" value="${p?.name||''}"></div>
+    <div class="field"><label>توضیحات</label><input id="pf-desc" value="${p?.description||''}"></div>
+    <div class="field"><label>قیمت (تومان)</label><input id="pf-price" type="number" value="${p?.price_rial||''}"></div>
+    <div class="field"><label>لینک عکس محصول (اختیاری)</label><input id="pf-image" placeholder="https://..." value="${p?.image_url||''}"></div>
+    ${p?.image_url ? `<img src="${p.image_url}" style="width:100%; max-height:140px; object-fit:cover; border-radius:10px; margin-bottom:14px;" onerror="this.style.display='none'">` : ''}
+    ${p ? `<div class="field"><label>وضعیت</label><select id="pf-active"><option value="1" ${p.active?'selected':''}>فعال</option><option value="0" ${!p.active?'selected':''}>غیرفعال</option></select></div>` : ''}
+    <button class="btn" onclick="saveProduct(${p?`'${p.id}'`:'null'})">ذخیره</button>
+  `);
+}
+async function saveProduct(existingId){
+  const body = {
+    category: document.getElementById('pf-cat').value,
+    name: document.getElementById('pf-name').value,
+    description: document.getElementById('pf-desc').value,
+    price_rial: Number(document.getElementById('pf-price').value),
+    image_url: document.getElementById('pf-image').value.trim() || null,
+  };
+  if(!body.name || !body.price_rial){ toast('❌ نام و قیمت الزامی است'); return; }
+  if(existingId){
+    body.active = Number(document.getElementById('pf-active').value);
+    await api(`/products/${existingId}`, {method:'PATCH', body:JSON.stringify(body)});
+  } else {
+    const id = document.getElementById('pf-id').value.trim();
+    if(!id){ toast('❌ شناسه محصول را وارد کن'); return; }
+    await api('/products', {method:'POST', body:JSON.stringify({id, ...body})});
   }
+  toast('✅ محصول ذخیره شد');
+  closeModal();
+  renderProducts();
 }
-async function submitCardTopup(){
-  const trackCode = document.getElementById('ct-trackcode').value.trim();
-  const cardLast4 = document.getElementById('ct-last4').value.trim();
-  const note = document.getElementById('ct-note').value.trim();
-  if(!trackCode){ showToast('❌ کد رهگیری تراکنش را وارد کن'); return; }
-  try {
-    await api('/api/topup/card-request', { method:'POST', body: JSON.stringify({ amountRial: cardTopupAmount, trackCode, cardLast4, note }) });
-    closeSheet('overlay-cardtopup');
-    showToast('✅ درخواست ثبت شد، منتظر تایید ادمین باش');
-  } catch (e) {
-    showToast('❌ ' + e.message);
-  }
+async function deleteProduct(id){
+  if(!confirm('محصول حذف شود؟')) return;
+  await api(`/products/${id}`, {method:'DELETE'});
+  toast('🗑 محصول حذف شد');
+  renderProducts();
 }
 
-/* ===================== WALLET PAGE ===================== */
-async function renderWallet(){
-  document.getElementById('wallet-rial').textContent = fmt(state.balanceRial);
-  document.getElementById('wallet-stars').textContent = fmt(state.balanceStars);
-  const field = document.getElementById('stars-field');
-  if(!field.dataset.built){
-    field.dataset.built = '1';
-    let html='';
-    for(let i=0;i<14;i++){
-      const top = Math.random()*100, left = Math.random()*100, size = 8+Math.random()*10;
-      html += `<span style="top:${top}%; left:${left}%; font-size:${size}px;">✦</span>`;
-    }
-    field.innerHTML = html;
-  }
-  document.getElementById('tx-list').innerHTML = `<div class="empty"><p>در حال بارگذاری…</p></div>`;
-  try {
-    const rows = await api('/api/wallet/transactions');
-    state.transactions = rows;
-    document.getElementById('tx-list').innerHTML = rows.length ? rows.map(t=>`
-      <div class="tx-item">
-        <div class="tx-icon ${t.type}">${t.type==='in'?'↓':'↑'}</div>
-        <div class="tx-mid"><div class="t1">${t.reason}</div><div class="t2">${t.created_at?.slice(0,16)}</div></div>
-        <div class="tx-amt ${t.type}">${t.type==='in'?'+':'−'}${fmt(t.amount)}${t.currency==='stars'?'⭐️':' ت'}</div>
-      </div>
-    `).join('') : `<div class="empty"><div class="e-icon">🧾</div><p>هنوز تراکنشی ثبت نشده</p></div>`;
-  } catch (e) { showToast('❌ ' + e.message); }
-}
-async function refreshMe(){
-  const me = await api('/api/me');
-  state.balanceRial = me.balance_rial;
-  state.balanceStars = me.balance_stars;
-  updateHeaderChip();
-  updateFab();
-  if (state.page === 'wallet') renderWallet();
-}
-function updateHeaderChip(){
-  document.getElementById('hdr-stars').textContent = fmt(state.balanceStars);
-  document.getElementById('hdr-rial').textContent = fmt(state.balanceRial) + ' ت';
+/* ===================== TRANSACTIONS ===================== */
+async function renderTransactions(){
+  const m = document.getElementById('main');
+  m.innerHTML = `
+    <div class="page-head"><div><h1>تراکنش‌ها</h1><p>تاریخچه کامل واریز و برداشت همه کاربران</p></div></div>
+    <div class="panel" style="padding:0;"><table>
+      <thead><tr><th>کاربر</th><th>نوع</th><th>ارز</th><th>مبلغ</th><th>دلیل</th><th>تاریخ</th></tr></thead>
+      <tbody id="tx-tbody"><tr class="empty-row"><td colspan="6">در حال بارگذاری…</td></tr></tbody>
+    </table></div>
+  `;
+  const rows = await api('/transactions?limit=100');
+  document.getElementById('tx-tbody').innerHTML = rows.length ? rows.map(t=>`
+    <tr>
+      <td>${t.first_name || '—'}${t.username?' @'+t.username:''}</td>
+      <td><span class="pill ${t.type==='in'?'active':'failed'}">${t.type==='in'?'واریز':'برداشت'}</span></td>
+      <td>${t.currency==='stars'?'⭐️ استارز':'ریال'}</td>
+      <td class="mono">${t.type==='in'?'+':'−'}${fmt(t.amount)}</td>
+      <td>${t.reason}</td>
+      <td>${t.created_at?.slice(0,16)}</td>
+    </tr>
+  `).join('') : `<tr class="empty-row"><td colspan="6">تراکنشی ثبت نشده</td></tr>`;
 }
 
-/* ===================== REFERRAL PAGE ===================== */
-async function renderReferral(){
-  document.getElementById('ref-list').innerHTML = `<div class="empty"><p>در حال بارگذاری…</p></div>`;
+/* ===================== CARD-TO-CARD TOP-UPS ===================== */
+function cardStatusLabel(s){ return {pending:'در انتظار بررسی', approved:'تایید شده', rejected:'رد شده'}[s] || s; }
+async function refreshCardTopupBadge(){
   try {
-    const r = await api('/api/referral');
-    state.referral = r;
-    document.getElementById('ref-link').textContent = `t.me/${(window.BOT_USERNAME||'starkadeh_bot')}?start=${r.ref_code}`;
-    document.getElementById('ref-count').textContent = r.invited_count;
-    document.getElementById('ref-earn').textContent = fmt(r.total_earned);
-    document.getElementById('ref-list').innerHTML = r.invited.length ? r.invited.map(i=>`
-      <div class="invite-item">
-        <div class="invite-avatar">${(i.first_name||'?')[0]}</div>
-        <div class="invite-mid"><div class="n1">${i.first_name||'کاربر'}</div><div class="n2">${i.username?'@'+i.username:'—'}</div></div>
-        <div class="invite-status active">عضو شده</div>
-      </div>
-    `).join('') : `<div class="empty"><div class="e-icon">🤝</div><p>هنوز کسی رو دعوت نکردی</p></div>`;
-  } catch (e) { showToast('❌ ' + e.message); }
+    const rows = await api('/card-topups?status=pending');
+    const badge = document.getElementById('cardtopup-badge');
+    if(rows.length){ badge.textContent = rows.length; badge.style.display = 'inline-block'; }
+    else { badge.style.display = 'none'; }
+  } catch(e) {}
 }
-function copyRefLink(){
-  const link = document.getElementById('ref-link').textContent;
-  if(navigator.clipboard){ navigator.clipboard.writeText('https://'+link).catch(()=>{}); }
-  haptic('medium');
-  showToast('🔗 لینک رفرال کپی شد');
+async function renderCardTopups(status='pending'){
+  const m = document.getElementById('main');
+  m.innerHTML = `
+    <div class="page-head"><div><h1>شارژ کارت به کارت</h1><p>بررسی و تایید درخواست‌های شارژ کیف‌پول از طریق واریز کارت‌به‌کارت</p></div></div>
+    <div class="toolbar">
+      <select id="ct-filter" onchange="renderCardTopups(this.value)">
+        <option value="pending" ${status==='pending'?'selected':''}>در انتظار بررسی</option>
+        <option value="approved" ${status==='approved'?'selected':''}>تایید شده</option>
+        <option value="rejected" ${status==='rejected'?'selected':''}>رد شده</option>
+        <option value="" ${status===''?'selected':''}>همه</option>
+      </select>
+    </div>
+    <div class="panel" style="padding:0;"><table>
+      <thead><tr><th>#</th><th>کاربر</th><th>مبلغ</th><th>کد رهگیری</th><th>۴ رقم آخر کارت</th><th>توضیح کاربر</th><th>تاریخ</th><th>وضعیت / عملیات</th></tr></thead>
+      <tbody id="ct-tbody"><tr class="empty-row"><td colspan="8">در حال بارگذاری…</td></tr></tbody>
+    </table></div>
+  `;
+  const rows = await api(`/card-topups?status=${status}`);
+  document.getElementById('ct-tbody').innerHTML = rows.length ? rows.map(c=>`
+    <tr>
+      <td class="mono">#${c.id}</td>
+      <td>${c.first_name || '—'}${c.username?' @'+c.username:''}<div style="color:var(--text-2); font-size:10px;">${c.tg_id}</div></td>
+      <td class="mono" style="color:var(--gold-1); font-weight:800;">${fmt(c.amount_rial)} ت</td>
+      <td class="mono">${c.track_code || '—'}</td>
+      <td class="mono">${c.card_last4 || '—'}</td>
+      <td>${c.note || '—'}</td>
+      <td>${c.created_at?.slice(0,16)}</td>
+      <td>
+        ${c.status==='pending' ? `
+          <div style="display:flex; gap:6px;">
+            <button class="btn small" style="background:var(--success); color:#08251a;" onclick="approveCardTopup(${c.id})">✅ تایید</button>
+            <button class="btn danger small" onclick="rejectCardTopup(${c.id})">رد</button>
+          </div>
+        ` : `<span class="pill ${c.status==='approved'?'active':'failed'}">${cardStatusLabel(c.status)}</span>`}
+      </td>
+    </tr>
+  `).join('') : `<tr class="empty-row"><td colspan="8">درخواستی یافت نشد</td></tr>`;
+}
+async function approveCardTopup(id){
+  if(!confirm('شارژ این کاربر تایید و به کیف‌پولش اضافه بشه؟')) return;
+  try {
+    await api(`/card-topups/${id}/approve`, {method:'POST'});
+    toast('✅ درخواست تایید و کیف‌پول شارژ شد');
+    renderCardTopups(document.getElementById('ct-filter')?.value || 'pending');
+    refreshCardTopupBadge();
+  } catch(e){ toast('❌ ' + e.message); }
+}
+async function rejectCardTopup(id){
+  const note = prompt('دلیل رد درخواست (اختیاری):') || '';
+  try {
+    await api(`/card-topups/${id}/reject`, {method:'POST', body:JSON.stringify({note})});
+    toast('🗑 درخواست رد شد');
+    renderCardTopups(document.getElementById('ct-filter')?.value || 'pending');
+    refreshCardTopupBadge();
+  } catch(e){ toast('❌ ' + e.message); }
 }
 
-/* ===================== PROFILE PAGE ===================== */
-async function renderProfile(){
-  document.getElementById('profile-name').textContent = state.user.name || 'کاربر مهمان';
-  document.getElementById('profile-username').textContent = state.user.username || '';
-  document.getElementById('profile-avatar').textContent = (state.user.name||'?').trim()[0] || '؟';
-  document.getElementById('orders-list').innerHTML = `<div class="empty"><p>در حال بارگذاری…</p></div>`;
-  try {
-    const rows = await api('/api/orders');
-    const statusLabel = {pending:'در انتظار', paid:'پرداخت‌شده', delivered:'تحویل‌شده', failed:'ناموفق'};
-    document.getElementById('orders-list').innerHTML = rows.length ? rows.map(o=>`
-      <div class="order-item">
-        <div class="oi">${categoryIcon[findProduct(o.product_id)?.category] || '📦'}</div>
-        <div class="om"><div class="t1">${findProduct(o.product_id)?.name || o.product_id} ×${o.qty}</div><div class="t2">${o.note ? '🎯 '+o.note+' — ' : ''}${o.created_at?.slice(0,16)}</div></div>
-        <div class="order-stat">${statusLabel[o.status]||o.status}</div>
-      </div>
-    `).join('') : `<div class="empty"><div class="e-icon">📦</div><p>هنوز سفارشی ثبت نشده</p></div>`;
-  } catch (e) { showToast('❌ ' + e.message); }
+/* ===================== MARKETPLACE (P2P GIFT) ===================== */
+function orderStatusLabel(s){ return {pending_transfer:'منتظر ارسال گیفت', completed:'تکمیل‌شده', disputed:'مورد اعتراض', refunded:'مسترد شده', cancelled:'لغو شده'}[s] || s; }
+function listingStatusLabel(s){ return {active:'فعال', reserved:'رزرو شده', sold:'فروخته شده', cancelled:'لغو شده'}[s] || s; }
+async function renderMarket(){
+  const m = document.getElementById('main');
+  m.innerHTML = `
+    <div class="page-head"><div><h1>بازار گیفت (پی‌توپی)</h1><p>آگهی‌های کاربران برای فروش گیفت پروفایل تلگرام به یکدیگر و سفارش‌های در جریان</p></div></div>
+    <div class="panel">
+      <div class="panel-title">سفارش‌ها <span style="font-weight:600; font-size:11px; color:var(--text-2);">مبلغ خریدار تا تایید دریافت گیفت نزد سیستم می‌مونه</span></div>
+      <div style="overflow-x:auto;"><table>
+        <thead><tr><th>#</th><th>گیفت</th><th>خریدار</th><th>فروشنده</th><th>مبلغ</th><th>کارمزد</th><th>وضعیت</th><th>تاریخ</th><th>عملیات</th></tr></thead>
+        <tbody id="mo-tbody"><tr class="empty-row"><td colspan="9">در حال بارگذاری…</td></tr></tbody>
+      </table></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">آگهی‌ها</div>
+      <div style="overflow-x:auto;"><table>
+        <thead><tr><th>عنوان</th><th>فروشنده</th><th>قیمت</th><th>وضعیت</th><th>تاریخ</th><th>عملیات</th></tr></thead>
+        <tbody id="ml-tbody"><tr class="empty-row"><td colspan="6">در حال بارگذاری…</td></tr></tbody>
+      </table></div>
+    </div>
+  `;
+  const [orders, listings] = await Promise.all([api('/market/orders'), api('/market/listings')]);
+
+  document.getElementById('mo-tbody').innerHTML = orders.length ? orders.map(o=>`
+    <tr>
+      <td class="mono">#${o.id}</td>
+      <td>${o.title}</td>
+      <td>${o.buyer_name || '—'}${o.buyer_username?' @'+o.buyer_username:''}</td>
+      <td>${o.seller_name || '—'}${o.seller_username?' @'+o.seller_username:''}</td>
+      <td class="mono">${fmt(o.price_rial)} ت</td>
+      <td class="mono">${fmt(o.fee_rial)} ت</td>
+      <td><span class="pill ${o.status==='completed'?'active':(o.status==='disputed'?'failed':'pending')}">${orderStatusLabel(o.status)}</span></td>
+      <td>${o.created_at?.slice(0,16)}</td>
+      <td>
+        ${['pending_transfer','disputed'].includes(o.status) ? `
+          <div style="display:flex; gap:6px;">
+            <button class="btn small" style="background:var(--success); color:#08251a;" onclick="releaseMarketOrder(${o.id})">آزادسازی برای فروشنده</button>
+            <button class="btn danger small" onclick="refundMarketOrder(${o.id})">استرداد به خریدار</button>
+          </div>` : '—'}
+      </td>
+    </tr>
+  `).join('') : `<tr class="empty-row"><td colspan="9">سفارشی ثبت نشده</td></tr>`;
+
+  document.getElementById('ml-tbody').innerHTML = listings.length ? listings.map(l=>`
+    <tr>
+      <td>${l.title}<div style="color:var(--text-2); font-size:10.5px;">${l.description || ''}</div></td>
+      <td>${l.first_name || '—'}${l.username?' @'+l.username:''}</td>
+      <td class="mono">${fmt(l.price_rial)} ت</td>
+      <td><span class="pill ${l.status==='active'?'active':(l.status==='cancelled'?'failed':'pending')}">${listingStatusLabel(l.status)}</span></td>
+      <td>${l.created_at?.slice(0,16)}</td>
+      <td>
+        ${l.status==='active' ? `<button class="btn danger small" onclick="removeListing(${l.id})">حذف آگهی</button>` : '—'}
+      </td>
+    </tr>
+  `).join('') : `<tr class="empty-row"><td colspan="6">آگهی‌ای ثبت نشده</td></tr>`;
+}
+async function releaseMarketOrder(id){
+  if(!confirm('مبلغ سفارش به کیف‌پول فروشنده واریز بشه؟')) return;
+  try { await api(`/market/orders/${id}/release`, {method:'POST'}); toast('✅ مبلغ به فروشنده آزاد شد'); renderMarket(); }
+  catch(e){ toast('❌ ' + e.message); }
+}
+async function refundMarketOrder(id){
+  if(!confirm('مبلغ سفارش به کیف‌پول خریدار برگردونده بشه؟')) return;
+  try { await api(`/market/orders/${id}/refund`, {method:'POST'}); toast('↩️ مبلغ به خریدار مسترد شد'); renderMarket(); }
+  catch(e){ toast('❌ ' + e.message); }
+}
+async function removeListing(id){
+  if(!confirm('این آگهی حذف (لغو) بشه؟')) return;
+  try { await api(`/market/listings/${id}`, {method:'PATCH', body:JSON.stringify({status:'cancelled'})}); toast('🗑 آگهی لغو شد'); renderMarket(); }
+  catch(e){ toast('❌ ' + e.message); }
 }
 
-/* ===================== STAKING ===================== */
-let stakeActionMode = 'deposit';
-async function renderStaking(){
-  document.getElementById('stake-amount').textContent = '…';
-  try {
-    const s = await api('/api/stake');
-    document.getElementById('stake-apr').textContent = s.apr + '٪';
-    document.getElementById('stake-amount').textContent = fmt(s.staked_rial);
-    document.getElementById('stake-pending').textContent = '+' + fmt(s.pending_reward) + ' ت';
-    document.getElementById('stake-cap-note').textContent = `سقف استیکینگ هر کاربر: ${fmt(s.cap_rial)} تومان — سود روزانه به‌صورت خودکار محاسبه می‌شه و موقع واریز/برداشت به کیف‌پولت اضافه می‌شه.`;
-    state.stake = s;
-  } catch (e) { showToast('❌ ' + e.message); }
-}
-function openStakeAction(mode){
-  stakeActionMode = mode;
-  document.getElementById('stake-sheet-title').innerHTML = (mode==='deposit' ? 'واریز به استیکینگ' : 'برداشت از استیکینگ') + ' <span class="x" onclick="closeSheet(\'overlay-stake\')">✕</span>';
-  document.getElementById('stake-sheet-sub').textContent = mode==='deposit'
-    ? `موجودی کیف‌پول: ${fmt(state.balanceRial)} تومان`
-    : `موجودی استیک‌شده: ${fmt(state.stake?.staked_rial||0)} تومان`;
-  document.getElementById('stake-amount-input').value = '';
-  openSheet('overlay-stake');
-}
-async function confirmStakeAction(){
-  const amount = Number(document.getElementById('stake-amount-input').value.replace(/[^\d]/g,''));
-  if (!amount || amount < 1000) { showToast('❌ مبلغ معتبر وارد کن'); return; }
-  try {
-    await api(`/api/stake/${stakeActionMode}`, { method:'POST', body: JSON.stringify({ amount }) });
-    closeSheet('overlay-stake');
-    await refreshMe();
-    await renderStaking();
-    haptic('heavy');
-    showToast(stakeActionMode==='deposit' ? '✅ به استیکینگ واریز شد' : '✅ از استیکینگ برداشت شد');
-  } catch (e) { showToast('❌ ' + e.message); }
+/* ===================== REFERRALS ===================== */
+async function renderReferrals(){
+  const m = document.getElementById('main');
+  m.innerHTML = `
+    <div class="page-head"><div><h1>رفرال‌ها</h1><p>کاربرانی که بیشترین دعوت و پورسانت را داشته‌اند</p></div></div>
+    <div class="panel" style="padding:0;"><table>
+      <thead><tr><th>کاربر</th><th>تعداد دعوت</th><th>پورسانت دریافتی</th></tr></thead>
+      <tbody id="ref-tbody"><tr class="empty-row"><td colspan="3">در حال بارگذاری…</td></tr></tbody>
+    </table></div>
+  `;
+  const rows = await api('/referrals');
+  document.getElementById('ref-tbody').innerHTML = rows.length ? rows.map(r=>`
+    <tr>
+      <td>${r.first_name || '—'}${r.username?' @'+r.username:''}</td>
+      <td>${fmt(r.invited_count)}</td>
+      <td class="mono">${fmt(r.commission_earned)} ت</td>
+    </tr>
+  `).join('') : `<tr class="empty-row"><td colspan="3">هنوز رفرالی ثبت نشده</td></tr>`;
 }
 
 /* ===================== TASKS ===================== */
-async function renderTasksPage(){
-  document.getElementById('tasks-list').innerHTML = `<div class="empty"><p>در حال بارگذاری…</p></div>`;
-  try {
-    const tasks = await api('/api/tasks');
-    document.getElementById('tasks-list').innerHTML = tasks.length ? tasks.map(t=>`
-      <div class="pcard" style="width:100%; flex-direction:row; align-items:center; gap:12px; margin-bottom:10px;">
-        <div class="picon">${t.type==='join_channel'?'📢':'🔗'}</div>
-        <div style="flex:1;">
-          <div class="pname">${t.title}</div>
-          <div class="pdesc">${t.description||''}</div>
-          <div class="price" style="margin-top:4px;">${t.reward_rial?fmt(t.reward_rial)+' ت':''}${t.reward_rial&&t.reward_stars?' + ':''}${t.reward_stars?'⭐️ '+fmt(t.reward_stars):''}</div>
-        </div>
-        ${t.done
-          ? `<span class="pill active" style="background:rgba(51,217,152,.13); color:var(--success); padding:6px 12px; border-radius:999px; font-size:11px; font-weight:800;">انجام شد ✓</span>`
-          : `<button class="addbtn" style="width:auto; padding:0 14px; height:32px; border-radius:9px;" onclick="doTask('${t.id}','${t.type}','${t.channel_username||''}','${t.link||''}')">انجام بده</button>`}
-      </div>
-    `).join('') : `<div class="empty"><div class="e-icon">🎯</div><p>فعلاً تسکی موجود نیست</p></div>`;
-  } catch (e) { showToast('❌ ' + e.message); }
-}
-async function doTask(id, type, channel, link){
-  if (type === 'join_channel' && channel) window.open('https://t.me/' + channel, '_blank');
-  if (type === 'link' && link) window.open(link, '_blank');
-  try {
-    await api(`/api/tasks/${id}/claim`, { method:'POST' });
-    await refreshMe();
-    await renderTasksPage();
-    haptic('heavy');
-    showToast('🎉 جایزه‌ی تسک دریافت شد');
-  } catch (e) { showToast('❌ ' + e.message); }
-}
-
-/* ===================== GAMES (free daily wheel, no wagering) ===================== */
-async function renderGames(){
-  document.getElementById('wheel-status').textContent = 'در حال بررسی…';
-  try {
-    const s = await api('/api/wheel/status');
-    const btn = document.getElementById('wheel-btn');
-    document.getElementById('wheel-dot').classList.toggle('show', s.canSpin);
-    if (s.canSpin) {
-      btn.disabled = false;
-      btn.style.opacity = 1;
-      document.getElementById('wheel-status').textContent = 'امروز هنوز نچرخوندی — چرخ شانستو امتحان کن!';
-    } else {
-      btn.disabled = true;
-      btn.style.opacity = .5;
-      const remain = s.nextSpinAt - Date.now();
-      const hours = Math.max(1, Math.ceil(remain / 3600000));
-      document.getElementById('wheel-status').textContent = `دفعه بعد تا ${hours} ساعت دیگه می‌تونی بچرخونی`;
-    }
-  } catch (e) { showToast('❌ ' + e.message); }
-}
-async function spinWheel(){
-  try {
-    haptic('medium');
-    const { reward } = await api('/api/wheel/spin', { method:'POST' });
-    await refreshMe();
-    await renderGames();
-    haptic('heavy');
-    showToast(reward > 0 ? `🎉 بردی! ${fmt(reward)} تومان به کیف‌پولت اضافه شد` : '😅 این‌بار جایزه‌ای نگرفتی، فردا دوباره امتحان کن');
-  } catch (e) { showToast('❌ ' + e.message); }
-}
-function openCommunityLink(type){
-  const link = type === 'channel' ? state.config?.channel : state.config?.chat;
-  if (!link) { showToast('این لینک هنوز تنظیم نشده'); return; }
-  window.open('https://t.me/' + link.replace('@',''), '_blank');
-}
-
-/* ===================== MARKET (P2P GIFT) ===================== */
-let marketTab = 'browse';
-function setMarketTab(t){
-  marketTab = t;
-  document.querySelectorAll('.market-subtab').forEach(el => el.classList.toggle('active', el.dataset.mt === t));
-  renderMarketTab();
-  haptic('light');
-}
-async function renderMarketTab(){
-  const wrap = document.getElementById('market-content');
-  wrap.innerHTML = `<div class="empty"><p>در حال بارگذاری…</p></div>`;
-  try {
-    if (marketTab === 'browse') return renderMarketBrowse(wrap);
-    if (marketTab === 'mine') return renderMarketMine(wrap);
-    if (marketTab === 'purchases') return renderMarketPurchases(wrap);
-    if (marketTab === 'sales') return renderMarketSales(wrap);
-  } catch (e) { showToast('❌ ' + e.message); }
-}
-async function renderMarketBrowse(wrap){
-  const rows = await api('/api/market/listings');
-  if (!rows.length) { wrap.innerHTML = `<div class="empty"><div class="e-icon">🎁</div><p>فعلاً آگهی فعالی نیست</p></div>`; return; }
-  wrap.innerHTML = `<div class="grid">${rows.map(l => `
-    <div class="pcard">
-      ${l.image_url ? `<img src="${l.image_url}" style="width:100%; height:74px; object-fit:cover; border-radius:10px; margin-bottom:2px;" onerror="this.style.display='none'">` : `<div class="picon">🎁</div>`}
-      <div class="pname">${l.title}</div>
-      <div class="pdesc">فروشنده: ${l.first_name || 'کاربر'}${l.username ? ' @' + l.username : ''}</div>
-      <div class="prow">
-        <div class="price">${fmt(l.price_rial)}<small> ت</small></div>
-        <button class="addbtn" onclick="buyMarketListing(${l.id})">خرید</button>
-      </div>
+async function renderTasks(){
+  const m = document.getElementById('main');
+  m.innerHTML = `
+    <div class="page-head">
+      <div><h1>تسک‌ها</h1><p>مدیریت تسک‌های قابل انجام برای کاربران (عضویت در کانال، لینک و...)</p></div>
+      <button class="btn small" onclick="openTaskForm()">+ افزودن تسک</button>
     </div>
-  `).join('')}</div>`;
+    <div class="panel" style="padding:0;"><table>
+      <thead><tr><th>عنوان</th><th>نوع</th><th>جایزه</th><th>تعداد انجام</th><th>وضعیت</th><th></th></tr></thead>
+      <tbody id="tasks-tbody"><tr class="empty-row"><td colspan="6">در حال بارگذاری…</td></tr></tbody>
+    </table></div>
+  `;
+  const rows = await api('/tasks');
+  const typeLabel = {join_channel:'عضویت در کانال', link:'لینک ساده'};
+  document.getElementById('tasks-tbody').innerHTML = rows.length ? rows.map(t=>`
+    <tr>
+      <td>${t.title}<div style="color:var(--text-2); font-size:10.5px;">${t.id}</div></td>
+      <td>${typeLabel[t.type]||t.type}</td>
+      <td class="mono">${t.reward_rial?fmt(t.reward_rial)+' ت':''}${t.reward_rial&&t.reward_stars?' + ':''}${t.reward_stars?'⭐️ '+fmt(t.reward_stars):''}</td>
+      <td>${fmt(t.completions)}</td>
+      <td><span class="pill ${t.active?'active':'failed'}">${t.active?'فعال':'غیرفعال'}</span></td>
+      <td style="display:flex; gap:6px;">
+        <button class="btn secondary small" onclick='openTaskForm(${JSON.stringify(t)})'>ویرایش</button>
+        <button class="btn danger small" onclick="deleteTask('${t.id}')">حذف</button>
+      </td>
+    </tr>
+  `).join('') : `<tr class="empty-row"><td colspan="6">تسکی ثبت نشده</td></tr>`;
 }
-async function renderMarketMine(wrap){
-  const rows = await api('/api/market/my-listings');
-  if (!rows.length) { wrap.innerHTML = `<div class="empty"><div class="e-icon">📋</div><p>هنوز آگهی‌ای ثبت نکردی</p></div>`; return; }
-  wrap.innerHTML = `<div class="list-card">${rows.map(l => `
-    <div class="list-row" style="cursor:default;">
-      <div class="li-icon">🎁</div>
-      <div class="li-text">${l.title}<div style="font-size:10.5px; color:var(--text-2);">${fmt(l.price_rial)} تومان — ${listingStatusFa(l.status)}</div></div>
-      ${l.status === 'active' ? `<button class="btn-ghost" style="max-width:90px; padding:6px 10px; font-size:11px;" onclick="cancelMyListing(${l.id})">لغو</button>` : ''}
+function onTaskTypeChange(){
+  const type = document.getElementById('tf-type').value;
+  document.getElementById('tf-channel-wrap').style.display = type==='join_channel' ? 'block':'none';
+  document.getElementById('tf-link-wrap').style.display = type==='link' ? 'block':'none';
+}
+function openTaskForm(t=null){
+  openModal(`
+    <div class="modal-title">${t?'ویرایش تسک':'افزودن تسک'} <span class="x" onclick="closeModal()">✕</span></div>
+    <div class="field"><label>شناسه (فقط برای تسک جدید)</label><input id="tf-id" value="${t?.id||''}" ${t?'disabled':''}></div>
+    <div class="field"><label>عنوان</label><input id="tf-title" value="${t?.title||''}"></div>
+    <div class="field"><label>توضیحات</label><input id="tf-desc" value="${t?.description||''}"></div>
+    <div class="field"><label>نوع تسک</label>
+      <select id="tf-type" onchange="onTaskTypeChange()">
+        <option value="join_channel" ${t?.type==='join_channel'?'selected':''}>عضویت در کانال (خودکار چک می‌شه)</option>
+        <option value="link" ${t?.type==='link'?'selected':''}>لینک ساده (کاربر می‌زنه و جایزه می‌گیره)</option>
+      </select>
     </div>
-  `).join('')}</div>`;
+    <div class="field" id="tf-channel-wrap"><label>یوزرنیم کانال (بدون @)</label><input id="tf-channel" value="${t?.channel_username||''}"></div>
+    <div class="field" id="tf-link-wrap" style="display:none;"><label>لینک</label><input id="tf-link" value="${t?.link||''}"></div>
+    <div class="field"><label>جایزه ریالی (تومان)</label><input id="tf-reward-rial" type="number" value="${t?.reward_rial||0}"></div>
+    <div class="field"><label>جایزه استارز</label><input id="tf-reward-stars" type="number" value="${t?.reward_stars||0}"></div>
+    ${t ? `<div class="field"><label>وضعیت</label><select id="tf-active"><option value="1" ${t.active?'selected':''}>فعال</option><option value="0" ${!t.active?'selected':''}>غیرفعال</option></select></div>` : ''}
+    <button class="btn" onclick="saveTask(${t?`'${t.id}'`:'null'})">ذخیره</button>
+  `);
+  onTaskTypeChange();
 }
-async function renderMarketPurchases(wrap){
-  const rows = await api('/api/market/my-purchases');
-  if (!rows.length) { wrap.innerHTML = `<div class="empty"><div class="e-icon">🧾</div><p>هنوز خریدی از بازار نداشتی</p></div>`; return; }
-  wrap.innerHTML = `<div class="list-card">${rows.map(o => `
-    <div class="list-row" style="cursor:default; align-items:flex-start;">
-      <div class="li-icon">🎁</div>
-      <div class="li-text">${o.title}<div style="font-size:10.5px; color:var(--text-2);">${fmt(o.price_rial)} تومان — ${orderStatusFa(o.status)}</div>
-        ${o.status === 'pending_transfer' ? `
-          <div style="display:flex; gap:8px; margin-top:8px;">
-            <button class="wbtn primary" style="padding:8px 12px; font-size:11px;" onclick="confirmMarketReceipt(${o.id})">✅ گیفت رو گرفتم</button>
-            <button class="wbtn" style="padding:8px 12px; font-size:11px;" onclick="disputeMarketOrder(${o.id})">⚠️ مشکل دارم</button>
-          </div>` : ''}
-      </div>
-    </div>
-  `).join('')}</div>`;
+async function saveTask(existingId){
+  const body = {
+    title: document.getElementById('tf-title').value,
+    description: document.getElementById('tf-desc').value,
+    type: document.getElementById('tf-type').value,
+    channel_username: document.getElementById('tf-channel').value || null,
+    link: document.getElementById('tf-link').value || null,
+    reward_rial: Number(document.getElementById('tf-reward-rial').value) || 0,
+    reward_stars: Number(document.getElementById('tf-reward-stars').value) || 0,
+  };
+  if(!body.title){ toast('❌ عنوان الزامی است'); return; }
+  if(existingId){
+    body.active = Number(document.getElementById('tf-active').value);
+    await api(`/tasks/${existingId}`, {method:'PATCH', body:JSON.stringify(body)});
+  } else {
+    const id = document.getElementById('tf-id').value.trim();
+    if(!id){ toast('❌ شناسه تسک را وارد کن'); return; }
+    await api('/tasks', {method:'POST', body:JSON.stringify({id, ...body})});
+  }
+  toast('✅ تسک ذخیره شد');
+  closeModal();
+  renderTasks();
 }
-async function renderMarketSales(wrap){
-  const rows = await api('/api/market/my-sales');
-  if (!rows.length) { wrap.innerHTML = `<div class="empty"><div class="e-icon">💰</div><p>هنوز فروشی نداشتی</p></div>`; return; }
-  wrap.innerHTML = `<div class="list-card">${rows.map(o => `
-    <div class="list-row" style="cursor:default;">
-      <div class="li-icon">💰</div>
-      <div class="li-text">${o.title}<div style="font-size:10.5px; color:var(--text-2);">${fmt(o.price_rial - o.fee_rial)} تومان (بعد از کارمزد) — ${orderStatusFa(o.status)}</div>
-        ${o.status === 'pending_transfer' ? `<div style="font-size:10.5px; color:var(--gold-1); margin-top:4px;">گیفت رو توی تلگرام برای خریدار بفرست</div>` : ''}
-      </div>
-    </div>
-  `).join('')}</div>`;
-}
-function listingStatusFa(s){ return {active:'فعال', reserved:'در حال خرید', sold:'فروخته شده', cancelled:'لغو شده'}[s] || s; }
-function orderStatusFa(s){ return {pending_transfer:'منتظر ارسال گیفت', completed:'تکمیل شده', disputed:'در حال بررسی اعتراض', refunded:'مبلغ مسترد شد', cancelled:'لغو شده'}[s] || s; }
-
-function openListingForm(){
-  document.getElementById('lf-title').value = '';
-  document.getElementById('lf-desc').value = '';
-  document.getElementById('lf-price').value = '';
-  document.getElementById('lf-image').value = '';
-  openSheet('overlay-listing');
-}
-async function submitListing(){
-  const title = document.getElementById('lf-title').value.trim();
-  const description = document.getElementById('lf-desc').value.trim();
-  const priceRial = parseInt(document.getElementById('lf-price').value.replace(/[^\d]/g, '')) || 0;
-  const imageUrl = document.getElementById('lf-image').value.trim();
-  if (!title) { showToast('❌ نام گیفت را وارد کن'); return; }
-  if (!priceRial || priceRial < 1000) { showToast('❌ قیمت معتبر وارد کن'); return; }
-  try {
-    await api('/api/market/listings', { method:'POST', body: JSON.stringify({ title, description, priceRial, imageUrl }) });
-    closeSheet('overlay-listing');
-    showToast('✅ آگهی ثبت شد');
-    setMarketTab('mine');
-  } catch (e) { showToast('❌ ' + e.message); }
-}
-async function buyMarketListing(id){
-  if (!confirm('مبلغ آگهی از کیف‌پولت کسر می‌شه تا فروشنده گیفت رو برات بفرسته. ادامه بدم؟')) return;
-  try {
-    await api(`/api/market/listings/${id}/buy`, { method:'POST' });
-    await refreshMe();
-    showToast('✅ خرید ثبت شد، منتظر ارسال گیفت از فروشنده باش');
-    setMarketTab('purchases');
-  } catch (e) { showToast('❌ ' + e.message); }
-}
-async function cancelMyListing(id){
-  if (!confirm('این آگهی لغو بشه؟')) return;
-  try { await api(`/api/market/listings/${id}`, { method:'DELETE' }); showToast('🗑 آگهی لغو شد'); renderMarketTab(); }
-  catch (e) { showToast('❌ ' + e.message); }
-}
-async function confirmMarketReceipt(id){
-  if (!confirm('گیفت رو توی تلگرام دریافت کردی؟ با تایید، پول به فروشنده واریز می‌شه.')) return;
-  try { await api(`/api/market/orders/${id}/confirm`, { method:'POST' }); haptic('heavy'); showToast('✅ تایید شد، مبلغ برای فروشنده آزاد شد'); renderMarketTab(); }
-  catch (e) { showToast('❌ ' + e.message); }
-}
-async function disputeMarketOrder(id){
-  if (!confirm('این سفارش برای بررسی به پشتیبانی ارجاع بشه؟')) return;
-  try { await api(`/api/market/orders/${id}/dispute`, { method:'POST' }); showToast('⚠️ اعتراض ثبت شد، پشتیبانی بررسی می‌کنه'); renderMarketTab(); }
-  catch (e) { showToast('❌ ' + e.message); }
-}
-
-/* ===================== TOAST ===================== */
-let toastTimer;
-function showToast(msg){
-  const el = document.getElementById('toast');
-  el.textContent = msg;
-  el.classList.add('show');
-  clearTimeout(toastTimer);
-  toastTimer = setTimeout(()=>el.classList.remove('show'), 2200);
+async function deleteTask(id){
+  if(!confirm('تسک حذف شود؟')) return;
+  await api(`/tasks/${id}`, {method:'DELETE'});
+  toast('🗑 تسک حذف شد');
+  renderTasks();
 }
 
 /* ===================== INIT ===================== */
-boot();
+if(token){ enterShell(); } else { document.getElementById('login-screen').style.display='flex'; }
 </script>
 </body>
 </html>
