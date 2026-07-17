@@ -1,0 +1,716 @@
+<!DOCTYPE html>
+<html dir="rtl" lang="fa">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>پنل مدیریت استارکده</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Vazirmatn:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg-0:#0a0b13; --bg-1:#12131f; --surface:#171929; --surface-2:#1f2136; --surface-3:#282b46;
+    --border:#262a42; --gold-1:#ffd447; --gold-2:#f4b400; --violet:#7c6cff; --violet-2:#5b4ee0;
+    --text-0:#f6f6fb; --text-1:#aab0d1; --text-2:#6a6f93; --success:#33d998; --danger:#ff6b7a; --warn:#ffb648;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  body{font-family:'Vazirmatn',sans-serif; background:var(--bg-0); color:var(--text-0); min-height:100vh;}
+  ::-webkit-scrollbar{width:8px; height:8px;} ::-webkit-scrollbar-thumb{background:var(--surface-3); border-radius:8px;}
+
+  /* ---------- LOGIN ---------- */
+  #login-screen{
+    min-height:100vh; display:flex; align-items:center; justify-content:center;
+    background:radial-gradient(120% 60% at 50% 0%, rgba(124,108,255,.14), transparent 60%), var(--bg-0);
+  }
+  .login-card{
+    width:340px; background:var(--surface); border:1px solid var(--border); border-radius:20px; padding:30px 26px;
+    text-align:center;
+  }
+  .login-mark{
+    width:52px; height:52px; margin:0 auto 14px; border-radius:14px;
+    background:linear-gradient(150deg,var(--gold-1),var(--gold-2)); display:flex; align-items:center; justify-content:center;
+    font-size:24px; box-shadow:0 6px 20px rgba(244,180,0,.3);
+  }
+  .login-card h1{font-size:17px; font-weight:800; margin-bottom:4px;}
+  .login-card p{font-size:12px; color:var(--text-2); margin-bottom:20px;}
+  .field{margin-bottom:14px; text-align:right;}
+  .field label{font-size:11.5px; color:var(--text-1); font-weight:600; display:block; margin-bottom:6px;}
+  input, select, textarea{
+    width:100%; background:var(--surface-2); border:1px solid var(--border); border-radius:10px;
+    padding:11px 12px; color:var(--text-0); font-family:inherit; font-size:13px;
+  }
+  input:focus, select:focus, textarea:focus{outline:none; border-color:var(--violet);}
+  .btn{
+    width:100%; padding:12px; border-radius:11px; border:none; cursor:pointer; font-family:inherit;
+    background:linear-gradient(135deg,var(--gold-1),var(--gold-2)); color:#241900; font-size:13.5px; font-weight:800;
+  }
+  .btn.secondary{background:var(--surface-2); color:var(--text-0); border:1px solid var(--border);}
+  .btn.danger{background:rgba(255,107,122,.15); color:var(--danger); border:1px solid rgba(255,107,122,.3);}
+  .btn.small{padding:7px 12px; font-size:11.5px; width:auto;}
+  .error-text{color:var(--danger); font-size:11.5px; margin-top:10px; display:none;}
+
+  /* ---------- SHELL ---------- */
+  #shell{display:none; min-height:100vh; grid-template-columns:230px 1fr;}
+  #shell.show{display:grid;}
+  aside{
+    background:var(--bg-1); border-left:1px solid var(--border); padding:20px 14px; position:sticky; top:0; height:100vh;
+  }
+  .brand{display:flex; align-items:center; gap:9px; padding:0 6px 22px; border-bottom:1px solid var(--border); margin-bottom:16px;}
+  .brand .m{width:32px; height:32px; border-radius:9px; background:linear-gradient(150deg,var(--gold-1),var(--gold-2)); display:flex; align-items:center; justify-content:center; font-size:15px;}
+  .brand b{font-size:14px; font-weight:800;}
+  .brand span{font-size:9.5px; color:var(--text-2); display:block;}
+  .nav-item{
+    display:flex; align-items:center; gap:10px; padding:11px 12px; border-radius:10px; cursor:pointer;
+    font-size:12.5px; font-weight:700; color:var(--text-1); margin-bottom:4px; transition:.15s;
+  }
+  .nav-item:hover{background:var(--surface-2);}
+  .nav-item.active{background:linear-gradient(135deg, rgba(124,108,255,.18), rgba(124,108,255,.06)); color:var(--text-0); border:1px solid var(--border);}
+  .nav-item .ic{font-size:15px; width:18px; text-align:center;}
+  .logout-btn{margin-top:20px; width:100%;}
+
+  main{padding:26px 30px; overflow-y:auto; max-height:100vh;}
+  .page-head{display:flex; align-items:center; justify-content:space-between; margin-bottom:22px;}
+  .page-head h1{font-size:19px; font-weight:800;}
+  .page-head p{font-size:12px; color:var(--text-2); margin-top:3px;}
+
+  /* ---------- CARDS / STATS ---------- */
+  .stat-grid{display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:24px;}
+  .stat-card{background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:17px 18px;}
+  .stat-card .l{font-size:11px; color:var(--text-2); font-weight:600; margin-bottom:8px;}
+  .stat-card .v{font-size:21px; font-weight:900;}
+  .stat-card .v.gold{color:var(--gold-1);}
+  .stat-card .v.violet{color:var(--violet);}
+  .panel{background:var(--surface); border:1px solid var(--border); border-radius:16px; padding:18px; margin-bottom:20px;}
+  .panel-title{font-size:13.5px; font-weight:800; margin-bottom:14px; display:flex; justify-content:space-between; align-items:center;}
+
+  /* simple bar chart */
+  .bars{display:flex; align-items:flex-end; gap:6px; height:120px;}
+  .bar-col{flex:1; display:flex; flex-direction:column; align-items:center; justify-content:flex-end; height:100%;}
+  .bar{width:100%; border-radius:5px 5px 0 0; background:linear-gradient(180deg,var(--gold-1),var(--gold-2)); min-height:3px;}
+  .bar-col span{font-size:8.5px; color:var(--text-2); margin-top:6px;}
+
+  /* ---------- TABLE ---------- */
+  table{width:100%; border-collapse:collapse; font-size:12.5px;}
+  th{text-align:right; color:var(--text-2); font-weight:700; font-size:11px; padding:10px 12px; border-bottom:1px solid var(--border);}
+  td{padding:11px 12px; border-bottom:1px solid var(--border); color:var(--text-0);}
+  tr:last-child td{border-bottom:none;}
+  tr.clickable{cursor:pointer;}
+  tr.clickable:hover td{background:var(--surface-2);}
+  .pill{display:inline-block; padding:3px 10px; border-radius:999px; font-size:10px; font-weight:800;}
+  .pill.paid, .pill.delivered, .pill.active{background:rgba(51,217,152,.13); color:var(--success);}
+  .pill.pending{background:rgba(255,182,72,.13); color:var(--warn);}
+  .pill.failed{background:rgba(255,107,122,.13); color:var(--danger);}
+  .mono{direction:ltr; text-align:right; font-variant-numeric:tabular-nums;}
+  .toolbar{display:flex; gap:10px; margin-bottom:16px; align-items:center;}
+  .toolbar input, .toolbar select{width:auto; min-width:180px;}
+  .empty-row td{text-align:center; color:var(--text-2); padding:30px;}
+
+  /* ---------- MODAL ---------- */
+  .overlay{position:fixed; inset:0; background:rgba(4,4,10,.65); backdrop-filter:blur(2px); z-index:60; display:none; align-items:center; justify-content:center;}
+  .overlay.show{display:flex;}
+  .modal{width:420px; max-width:92vw; max-height:86vh; overflow-y:auto; background:var(--bg-1); border:1px solid var(--border); border-radius:18px; padding:22px;}
+  .modal-title{font-size:15px; font-weight:800; margin-bottom:16px; display:flex; justify-content:space-between; align-items:center;}
+  .modal-title .x{cursor:pointer; color:var(--text-2); font-size:17px;}
+  .kv{display:flex; justify-content:space-between; font-size:12px; padding:8px 0; border-bottom:1px solid var(--border);}
+  .kv b{color:var(--text-0);}
+  .kv span{color:var(--text-2);}
+
+  #toast{
+    position:fixed; bottom:24px; left:50%; transform:translateX(-50%) translateY(20px); z-index:90;
+    background:var(--surface-3); border:1px solid var(--border); padding:12px 20px; border-radius:11px;
+    font-size:12.5px; font-weight:700; opacity:0; pointer-events:none; transition:.25s;
+  }
+  #toast.show{opacity:1; transform:translateX(-50%) translateY(0);}
+
+  @media (max-width:900px){
+    #shell.show{grid-template-columns:1fr;}
+    aside{display:none;}
+    .stat-grid{grid-template-columns:repeat(2,1fr);}
+  }
+</style>
+</head>
+<body>
+
+<!-- ===================== LOGIN ===================== -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-mark">🔐</div>
+    <h1>ورود به پنل مدیریت</h1>
+    <p>استارکده — مدیریت فروشگاه، کیف‌پول و رفرال</p>
+    <div class="field">
+      <label>رمز عبور ادمین</label>
+      <input type="password" id="pw-input" placeholder="••••••••" onkeydown="if(event.key==='Enter')doLogin()">
+    </div>
+    <button class="btn" onclick="doLogin()">ورود</button>
+    <div class="error-text" id="login-err">رمز عبور اشتباه است</div>
+  </div>
+</div>
+
+<!-- ===================== SHELL ===================== -->
+<div id="shell">
+  <aside>
+    <div class="brand">
+      <div class="m">✦</div>
+      <div><b>استارکده</b><span>پنل مدیریت</span></div>
+    </div>
+    <div class="nav-item active" data-p="dashboard" onclick="go('dashboard')"><span class="ic">📊</span> داشبورد</div>
+    <div class="nav-item" data-p="users" onclick="go('users')"><span class="ic">👥</span> کاربران</div>
+    <div class="nav-item" data-p="orders" onclick="go('orders')"><span class="ic">🧾</span> سفارش‌ها</div>
+    <div class="nav-item" data-p="products" onclick="go('products')"><span class="ic">📦</span> محصولات</div>
+    <div class="nav-item" data-p="transactions" onclick="go('transactions')"><span class="ic">💳</span> تراکنش‌ها</div>
+    <div class="nav-item" data-p="cardtopups" onclick="go('cardtopups')"><span class="ic">🏦</span> کارت به کارت<span id="cardtopup-badge" style="display:none; margin-right:auto; background:var(--danger); color:#fff; font-size:9.5px; font-weight:800; border-radius:999px; padding:1px 6px;"></span></div>
+    <div class="nav-item" data-p="market" onclick="go('market')"><span class="ic">🎁</span> بازار گیفت</div>
+    <div class="nav-item" data-p="referrals" onclick="go('referrals')"><span class="ic">🤝</span> رفرال‌ها</div>
+    <div class="nav-item" data-p="tasks" onclick="go('tasks')"><span class="ic">🎯</span> تسک‌ها</div>
+    <button class="btn secondary logout-btn" onclick="logout()">خروج از حساب</button>
+  </aside>
+
+  <main id="main"></main>
+</div>
+
+<div class="overlay" id="overlay" onclick="if(event.target===this) closeModal()">
+  <div class="modal" id="modal-body"></div>
+</div>
+<div id="toast"></div>
+
+<script>
+const API = '/admin/api';
+let token = localStorage.getItem('starkadeh_admin_token') || null;
+let currentPage = 'dashboard';
+
+/* ===================== AUTH ===================== */
+async function doLogin(){
+  const password = document.getElementById('pw-input').value;
+  const res = await fetch(`${API}/login`, {method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify({password})});
+  if(!res.ok){ document.getElementById('login-err').style.display='block'; return; }
+  const data = await res.json();
+  token = data.token;
+  localStorage.setItem('starkadeh_admin_token', token);
+  enterShell();
+}
+function logout(){
+  fetch(`${API}/logout`, {method:'POST', headers:authHeaders()}).catch(()=>{});
+  localStorage.removeItem('starkadeh_admin_token');
+  token = null;
+  document.getElementById('shell').classList.remove('show');
+  document.getElementById('login-screen').style.display='flex';
+}
+function authHeaders(){ return {'Content-Type':'application/json', 'Authorization':'Bearer '+token}; }
+function enterShell(){
+  document.getElementById('login-screen').style.display='none';
+  document.getElementById('shell').classList.add('show');
+  go('dashboard');
+  refreshCardTopupBadge();
+}
+async function api(path, opts={}){
+  const res = await fetch(`${API}${path}`, {...opts, headers:{...authHeaders(), ...(opts.headers||{})}});
+  if(res.status===401){ logout(); throw new Error('unauthorized'); }
+  return res.json();
+}
+
+/* ===================== NAV ===================== */
+function go(page){
+  currentPage = page;
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.toggle('active', n.dataset.p===page));
+  const renderers = {dashboard:renderDashboard, users:renderUsers, orders:renderOrders, products:renderProducts, transactions:renderTransactions, cardtopups:renderCardTopups, market:renderMarket, referrals:renderReferrals, tasks:renderTasks};
+  renderers[page]();
+}
+
+/* ===================== HELPERS ===================== */
+function fmt(n){ return Number(n||0).toLocaleString('en-US'); }
+function toast(msg){
+  const el = document.getElementById('toast');
+  el.textContent = msg; el.classList.add('show');
+  setTimeout(()=>el.classList.remove('show'), 2200);
+}
+function openModal(html){ document.getElementById('modal-body').innerHTML = html; document.getElementById('overlay').classList.add('show'); }
+function closeModal(){ document.getElementById('overlay').classList.remove('show'); }
+function statusLabel(s){ return {pending:'در انتظار', paid:'پرداخت‌شده', delivered:'تحویل‌شده', failed:'ناموفق'}[s] || s; }
+
+/* ===================== DASHBOARD ===================== */
+async function renderDashboard(){
+  const m = document.getElementById('main');
+  m.innerHTML = `<div class="page-head"><div><h1>داشبورد</h1><p>نمای کلی فروش و فعالیت کاربران</p></div></div><div id="dash-body">در حال بارگذاری…</div>`;
+  const s = await api('/stats');
+  const maxRev = Math.max(1, ...s.revenueByDay.map(d=>d.total));
+  document.getElementById('dash-body').innerHTML = `
+    <div class="stat-grid">
+      <div class="stat-card"><div class="l">تعداد کاربران</div><div class="v">${fmt(s.users)}</div></div>
+      <div class="stat-card"><div class="l">سفارش‌های امروز</div><div class="v violet">${fmt(s.todayOrders)}</div></div>
+      <div class="stat-card"><div class="l">مجموع واریزی ریالی</div><div class="v gold">${fmt(s.rialIn)} ت</div></div>
+      <div class="stat-card"><div class="l">استارز فروخته‌شده</div><div class="v gold">⭐️ ${fmt(s.starsIn)}</div></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">درآمد ۱۴ روز اخیر (تومان)</div>
+      <div class="bars">
+        ${s.revenueByDay.length ? s.revenueByDay.map(d=>`
+          <div class="bar-col">
+            <div class="bar" style="height:${Math.max(4,(d.total/maxRev)*100)}%" title="${fmt(d.total)} ت"></div>
+            <span>${d.d.slice(5)}</span>
+          </div>`).join('') : `<div style="color:var(--text-2); font-size:12px;">هنوز داده‌ای ثبت نشده</div>`}
+      </div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">پرفروش‌ترین محصولات</div>
+      <table>
+        <thead><tr><th>محصول</th><th>تعداد فروش</th><th>درآمد</th></tr></thead>
+        <tbody>
+          ${s.topProducts.length ? s.topProducts.map(p=>`
+            <tr><td>${p.product_id}</td><td>${fmt(p.sales)}</td><td class="mono">${fmt(p.revenue)} ت</td></tr>
+          `).join('') : `<tr class="empty-row"><td colspan="3">داده‌ای موجود نیست</td></tr>`}
+        </tbody>
+      </table>
+    </div>
+  `;
+}
+
+/* ===================== USERS ===================== */
+async function renderUsers(q=''){
+  const m = document.getElementById('main');
+  m.innerHTML = `
+    <div class="page-head"><div><h1>کاربران</h1><p>لیست کاربران مینی‌اپ و موجودی آن‌ها</p></div></div>
+    <div class="toolbar"><input id="user-search" placeholder="جستجو بر اساس آی‌دی، یوزرنیم یا نام…" value="${q}" oninput="debounceUserSearch(this.value)"></div>
+    <div class="panel" style="padding:0;"><table>
+      <thead><tr><th>کاربر</th><th>آی‌دی تلگرام</th><th>موجودی ریال</th><th>موجودی استارز</th><th>تاریخ عضویت</th></tr></thead>
+      <tbody id="users-tbody"><tr class="empty-row"><td colspan="5">در حال بارگذاری…</td></tr></tbody>
+    </table></div>
+  `;
+  const { rows } = await api(`/users?q=${encodeURIComponent(q)}&limit=100`);
+  document.getElementById('users-tbody').innerHTML = rows.length ? rows.map(u=>`
+    <tr class="clickable" onclick="openUserDetail(${u.tg_id})">
+      <td>${u.first_name || '—'}${u.username ? ' <span style=\"color:var(--text-2)\">@'+u.username+'</span>' : ''}</td>
+      <td class="mono">${u.tg_id}</td>
+      <td class="mono">${fmt(u.balance_rial)} ت</td>
+      <td class="mono">⭐️ ${fmt(u.balance_stars)}</td>
+      <td>${u.created_at?.slice(0,10) || '—'}</td>
+    </tr>
+  `).join('') : `<tr class="empty-row"><td colspan="5">کاربری یافت نشد</td></tr>`;
+}
+let userSearchTimer;
+function debounceUserSearch(v){ clearTimeout(userSearchTimer); userSearchTimer = setTimeout(()=>renderUsers(v), 350); }
+
+async function openUserDetail(tgId){
+  const { user, orders, transactions, referrals } = await api(`/users/${tgId}`);
+  openModal(`
+    <div class="modal-title">${user.first_name || 'کاربر'} ${user.username ? '@'+user.username : ''} <span class="x" onclick="closeModal()">✕</span></div>
+    <div class="kv"><span>موجودی ریالی</span><b class="mono">${fmt(user.balance_rial)} تومان</b></div>
+    <div class="kv"><span>موجودی استارز</span><b class="mono">⭐️ ${fmt(user.balance_stars)}</b></div>
+    <div class="kv"><span>تعداد سفارش‌ها</span><b>${orders.length}</b></div>
+    <div class="kv"><span>تعداد زیرمجموعه</span><b>${referrals.length}</b></div>
+
+    <div style="margin-top:16px; font-size:12.5px; font-weight:800;">اصلاح موجودی</div>
+    <div style="display:flex; gap:8px; margin-top:8px;">
+      <select id="adj-currency" style="max-width:110px;"><option value="rial">ریال</option><option value="stars">استارز</option></select>
+      <input id="adj-amount" type="number" placeholder="مبلغ (منفی = کسر)">
+    </div>
+    <input id="adj-reason" placeholder="دلیل (اختیاری)" style="margin-top:8px;">
+    <button class="btn small" style="width:100%; margin-top:10px;" onclick="adjustBalance(${tgId})">ثبت اصلاح موجودی</button>
+
+    <div style="margin-top:18px; font-size:12.5px; font-weight:800;">آخرین سفارش‌ها</div>
+    <table style="margin-top:8px;"><tbody>
+      ${orders.slice(0,5).map(o=>`<tr><td>${o.product_id} ×${o.qty}</td><td class="mono">${fmt(o.amount_rial)} ت</td><td><span class="pill ${o.status}">${statusLabel(o.status)}</span></td></tr>`).join('') || '<tr class="empty-row"><td colspan="3">سفارشی ثبت نشده</td></tr>'}
+    </tbody></table>
+  `);
+}
+async function adjustBalance(tgId){
+  const currency = document.getElementById('adj-currency').value;
+  const amount = Number(document.getElementById('adj-amount').value);
+  const reason = document.getElementById('adj-reason').value;
+  if(!amount){ toast('❌ مبلغ را وارد کن'); return; }
+  await api(`/users/${tgId}/adjust-balance`, {method:'POST', body:JSON.stringify({currency, amount, reason})});
+  toast('✅ موجودی اصلاح شد');
+  closeModal();
+  renderUsers();
+}
+
+/* ===================== ORDERS ===================== */
+async function renderOrders(status=''){
+  const m = document.getElementById('main');
+  m.innerHTML = `
+    <div class="page-head"><div><h1>سفارش‌ها</h1><p>مدیریت و پیگیری وضعیت سفارش‌ها</p></div></div>
+    <div class="toolbar">
+      <select id="order-filter" onchange="renderOrders(this.value)">
+        <option value="">همه وضعیت‌ها</option>
+        <option value="pending" ${status==='pending'?'selected':''}>در انتظار</option>
+        <option value="paid" ${status==='paid'?'selected':''}>پرداخت‌شده</option>
+        <option value="delivered" ${status==='delivered'?'selected':''}>تحویل‌شده</option>
+        <option value="failed" ${status==='failed'?'selected':''}>ناموفق</option>
+      </select>
+    </div>
+    <div class="panel" style="padding:0;"><table>
+      <thead><tr><th>#</th><th>کاربر</th><th>محصول</th><th>مبلغ</th><th>مقصد / توضیحات</th><th>روش پرداخت</th><th>وضعیت</th><th>تاریخ</th></tr></thead>
+      <tbody id="orders-tbody"><tr class="empty-row"><td colspan="8">در حال بارگذاری…</td></tr></tbody>
+    </table></div>
+  `;
+  const { rows } = await api(`/orders?status=${status}&limit=100`);
+  const methodLabel = {wallet:'کیف‌پول', stars:'استارز', gateway:'درگاه'};
+  document.getElementById('orders-tbody').innerHTML = rows.length ? rows.map(o=>`
+    <tr>
+      <td class="mono">#${o.id}</td>
+      <td>${o.first_name || '—'}${o.username?' @'+o.username:''}</td>
+      <td>${o.product_id} ×${o.qty}</td>
+      <td class="mono">${fmt(o.amount_rial)} ت</td>
+      <td style="color:var(--gold-1); font-weight:700;">${o.note || '—'}</td>
+      <td>${methodLabel[o.pay_method] || o.pay_method}</td>
+      <td>
+        <select onchange="updateOrderStatus(${o.id}, this.value)" style="width:auto; padding:4px 8px; font-size:11px;">
+          ${['pending','paid','delivered','failed'].map(s=>`<option value="${s}" ${s===o.status?'selected':''}>${statusLabel(s)}</option>`).join('')}
+        </select>
+      </td>
+      <td>${o.created_at?.slice(0,16) || '—'}</td>
+    </tr>
+  `).join('') : `<tr class="empty-row"><td colspan="8">سفارشی یافت نشد</td></tr>`;
+}
+async function updateOrderStatus(id, status){
+  await api(`/orders/${id}`, {method:'PATCH', body:JSON.stringify({status})});
+  toast('✅ وضعیت سفارش به‌روزرسانی شد');
+}
+
+/* ===================== PRODUCTS ===================== */
+async function renderProducts(){
+  const m = document.getElementById('main');
+  m.innerHTML = `
+    <div class="page-head">
+      <div><h1>محصولات</h1><p>مدیریت کاتالوگ فروشگاه</p></div>
+      <button class="btn small" onclick="openProductForm()">+ افزودن محصول</button>
+    </div>
+    <div class="panel" style="padding:0;"><table>
+      <thead><tr><th>نام</th><th>دسته</th><th>قیمت</th><th>وضعیت</th><th></th></tr></thead>
+      <tbody id="products-tbody"><tr class="empty-row"><td colspan="5">در حال بارگذاری…</td></tr></tbody>
+    </table></div>
+  `;
+  const rows = await api('/products');
+  document.getElementById('products-tbody').innerHTML = rows.length ? rows.map(p=>`
+    <tr>
+      <td style="display:flex; align-items:center; gap:9px;">
+        ${p.image_url ? `<img src="${p.image_url}" style="width:34px; height:34px; border-radius:8px; object-fit:cover; flex-shrink:0;" onerror="this.style.display='none'">` : `<div style="width:34px; height:34px; border-radius:8px; background:var(--surface-3); flex-shrink:0;"></div>`}
+        <div>${p.name}<div style="color:var(--text-2); font-size:10.5px;">${p.id}</div></div>
+      </td>
+      <td>${p.category}</td>
+      <td class="mono">${fmt(p.price_rial)} ت</td>
+      <td><span class="pill ${p.active? 'active':'failed'}">${p.active?'فعال':'غیرفعال'}</span></td>
+      <td style="display:flex; gap:6px;">
+        <button class="btn secondary small" onclick='openProductForm(${JSON.stringify(p)})'>ویرایش</button>
+        <button class="btn danger small" onclick="deleteProduct('${p.id}')">حذف</button>
+      </td>
+    </tr>
+  `).join('') : `<tr class="empty-row"><td colspan="5">محصولی ثبت نشده</td></tr>`;
+}
+function openProductForm(p=null){
+  openModal(`
+    <div class="modal-title">${p?'ویرایش محصول':'افزودن محصول'} <span class="x" onclick="closeModal()">✕</span></div>
+    <div class="field"><label>شناسه (فقط برای محصول جدید)</label><input id="pf-id" value="${p?.id||''}" ${p?'disabled':''}></div>
+    <div class="field"><label>دسته‌بندی</label>
+      <select id="pf-cat">
+        ${['stars','premium','gift','giftmarket','service'].map(c=>`<option value="${c}" ${p?.category===c?'selected':''}>${c}</option>`).join('')}
+      </select>
+    </div>
+    <div class="field"><label>نام محصول</label><input id="pf-name" value="${p?.name||''}"></div>
+    <div class="field"><label>توضیحات</label><input id="pf-desc" value="${p?.description||''}"></div>
+    <div class="field"><label>قیمت (تومان)</label><input id="pf-price" type="number" value="${p?.price_rial||''}"></div>
+    <div class="field"><label>لینک عکس محصول (اختیاری)</label><input id="pf-image" placeholder="https://..." value="${p?.image_url||''}"></div>
+    ${p?.image_url ? `<img src="${p.image_url}" style="width:100%; max-height:140px; object-fit:cover; border-radius:10px; margin-bottom:14px;" onerror="this.style.display='none'">` : ''}
+    ${p ? `<div class="field"><label>وضعیت</label><select id="pf-active"><option value="1" ${p.active?'selected':''}>فعال</option><option value="0" ${!p.active?'selected':''}>غیرفعال</option></select></div>` : ''}
+    <button class="btn" onclick="saveProduct(${p?`'${p.id}'`:'null'})">ذخیره</button>
+  `);
+}
+async function saveProduct(existingId){
+  const body = {
+    category: document.getElementById('pf-cat').value,
+    name: document.getElementById('pf-name').value,
+    description: document.getElementById('pf-desc').value,
+    price_rial: Number(document.getElementById('pf-price').value),
+    image_url: document.getElementById('pf-image').value.trim() || null,
+  };
+  if(!body.name || !body.price_rial){ toast('❌ نام و قیمت الزامی است'); return; }
+  if(existingId){
+    body.active = Number(document.getElementById('pf-active').value);
+    await api(`/products/${existingId}`, {method:'PATCH', body:JSON.stringify(body)});
+  } else {
+    const id = document.getElementById('pf-id').value.trim();
+    if(!id){ toast('❌ شناسه محصول را وارد کن'); return; }
+    await api('/products', {method:'POST', body:JSON.stringify({id, ...body})});
+  }
+  toast('✅ محصول ذخیره شد');
+  closeModal();
+  renderProducts();
+}
+async function deleteProduct(id){
+  if(!confirm('محصول حذف شود؟')) return;
+  await api(`/products/${id}`, {method:'DELETE'});
+  toast('🗑 محصول حذف شد');
+  renderProducts();
+}
+
+/* ===================== TRANSACTIONS ===================== */
+async function renderTransactions(){
+  const m = document.getElementById('main');
+  m.innerHTML = `
+    <div class="page-head"><div><h1>تراکنش‌ها</h1><p>تاریخچه کامل واریز و برداشت همه کاربران</p></div></div>
+    <div class="panel" style="padding:0;"><table>
+      <thead><tr><th>کاربر</th><th>نوع</th><th>ارز</th><th>مبلغ</th><th>دلیل</th><th>تاریخ</th></tr></thead>
+      <tbody id="tx-tbody"><tr class="empty-row"><td colspan="6">در حال بارگذاری…</td></tr></tbody>
+    </table></div>
+  `;
+  const rows = await api('/transactions?limit=100');
+  document.getElementById('tx-tbody').innerHTML = rows.length ? rows.map(t=>`
+    <tr>
+      <td>${t.first_name || '—'}${t.username?' @'+t.username:''}</td>
+      <td><span class="pill ${t.type==='in'?'active':'failed'}">${t.type==='in'?'واریز':'برداشت'}</span></td>
+      <td>${t.currency==='stars'?'⭐️ استارز':'ریال'}</td>
+      <td class="mono">${t.type==='in'?'+':'−'}${fmt(t.amount)}</td>
+      <td>${t.reason}</td>
+      <td>${t.created_at?.slice(0,16)}</td>
+    </tr>
+  `).join('') : `<tr class="empty-row"><td colspan="6">تراکنشی ثبت نشده</td></tr>`;
+}
+
+/* ===================== CARD-TO-CARD TOP-UPS ===================== */
+function cardStatusLabel(s){ return {pending:'در انتظار بررسی', approved:'تایید شده', rejected:'رد شده'}[s] || s; }
+async function refreshCardTopupBadge(){
+  try {
+    const rows = await api('/card-topups?status=pending');
+    const badge = document.getElementById('cardtopup-badge');
+    if(rows.length){ badge.textContent = rows.length; badge.style.display = 'inline-block'; }
+    else { badge.style.display = 'none'; }
+  } catch(e) {}
+}
+async function renderCardTopups(status='pending'){
+  const m = document.getElementById('main');
+  m.innerHTML = `
+    <div class="page-head"><div><h1>شارژ کارت به کارت</h1><p>بررسی و تایید درخواست‌های شارژ کیف‌پول از طریق واریز کارت‌به‌کارت</p></div></div>
+    <div class="toolbar">
+      <select id="ct-filter" onchange="renderCardTopups(this.value)">
+        <option value="pending" ${status==='pending'?'selected':''}>در انتظار بررسی</option>
+        <option value="approved" ${status==='approved'?'selected':''}>تایید شده</option>
+        <option value="rejected" ${status==='rejected'?'selected':''}>رد شده</option>
+        <option value="" ${status===''?'selected':''}>همه</option>
+      </select>
+    </div>
+    <div class="panel" style="padding:0;"><table>
+      <thead><tr><th>#</th><th>کاربر</th><th>مبلغ</th><th>کد رهگیری</th><th>۴ رقم آخر کارت</th><th>توضیح کاربر</th><th>تاریخ</th><th>وضعیت / عملیات</th></tr></thead>
+      <tbody id="ct-tbody"><tr class="empty-row"><td colspan="8">در حال بارگذاری…</td></tr></tbody>
+    </table></div>
+  `;
+  const rows = await api(`/card-topups?status=${status}`);
+  document.getElementById('ct-tbody').innerHTML = rows.length ? rows.map(c=>`
+    <tr>
+      <td class="mono">#${c.id}</td>
+      <td>${c.first_name || '—'}${c.username?' @'+c.username:''}<div style="color:var(--text-2); font-size:10px;">${c.tg_id}</div></td>
+      <td class="mono" style="color:var(--gold-1); font-weight:800;">${fmt(c.amount_rial)} ت</td>
+      <td class="mono">${c.track_code || '—'}</td>
+      <td class="mono">${c.card_last4 || '—'}</td>
+      <td>${c.note || '—'}</td>
+      <td>${c.created_at?.slice(0,16)}</td>
+      <td>
+        ${c.status==='pending' ? `
+          <div style="display:flex; gap:6px;">
+            <button class="btn small" style="background:var(--success); color:#08251a;" onclick="approveCardTopup(${c.id})">✅ تایید</button>
+            <button class="btn danger small" onclick="rejectCardTopup(${c.id})">رد</button>
+          </div>
+        ` : `<span class="pill ${c.status==='approved'?'active':'failed'}">${cardStatusLabel(c.status)}</span>`}
+      </td>
+    </tr>
+  `).join('') : `<tr class="empty-row"><td colspan="8">درخواستی یافت نشد</td></tr>`;
+}
+async function approveCardTopup(id){
+  if(!confirm('شارژ این کاربر تایید و به کیف‌پولش اضافه بشه؟')) return;
+  try {
+    await api(`/card-topups/${id}/approve`, {method:'POST'});
+    toast('✅ درخواست تایید و کیف‌پول شارژ شد');
+    renderCardTopups(document.getElementById('ct-filter')?.value || 'pending');
+    refreshCardTopupBadge();
+  } catch(e){ toast('❌ ' + e.message); }
+}
+async function rejectCardTopup(id){
+  const note = prompt('دلیل رد درخواست (اختیاری):') || '';
+  try {
+    await api(`/card-topups/${id}/reject`, {method:'POST', body:JSON.stringify({note})});
+    toast('🗑 درخواست رد شد');
+    renderCardTopups(document.getElementById('ct-filter')?.value || 'pending');
+    refreshCardTopupBadge();
+  } catch(e){ toast('❌ ' + e.message); }
+}
+
+/* ===================== MARKETPLACE (P2P GIFT) ===================== */
+function orderStatusLabel(s){ return {pending_transfer:'منتظر ارسال گیفت', completed:'تکمیل‌شده', disputed:'مورد اعتراض', refunded:'مسترد شده', cancelled:'لغو شده'}[s] || s; }
+function listingStatusLabel(s){ return {active:'فعال', reserved:'رزرو شده', sold:'فروخته شده', cancelled:'لغو شده'}[s] || s; }
+async function renderMarket(){
+  const m = document.getElementById('main');
+  m.innerHTML = `
+    <div class="page-head"><div><h1>بازار گیفت (پی‌توپی)</h1><p>آگهی‌های کاربران برای فروش گیفت پروفایل تلگرام به یکدیگر و سفارش‌های در جریان</p></div></div>
+    <div class="panel">
+      <div class="panel-title">سفارش‌ها <span style="font-weight:600; font-size:11px; color:var(--text-2);">مبلغ خریدار تا تایید دریافت گیفت نزد سیستم می‌مونه</span></div>
+      <div style="overflow-x:auto;"><table>
+        <thead><tr><th>#</th><th>گیفت</th><th>خریدار</th><th>فروشنده</th><th>مبلغ</th><th>کارمزد</th><th>وضعیت</th><th>تاریخ</th><th>عملیات</th></tr></thead>
+        <tbody id="mo-tbody"><tr class="empty-row"><td colspan="9">در حال بارگذاری…</td></tr></tbody>
+      </table></div>
+    </div>
+    <div class="panel">
+      <div class="panel-title">آگهی‌ها</div>
+      <div style="overflow-x:auto;"><table>
+        <thead><tr><th>عنوان</th><th>فروشنده</th><th>قیمت</th><th>وضعیت</th><th>تاریخ</th><th>عملیات</th></tr></thead>
+        <tbody id="ml-tbody"><tr class="empty-row"><td colspan="6">در حال بارگذاری…</td></tr></tbody>
+      </table></div>
+    </div>
+  `;
+  const [orders, listings] = await Promise.all([api('/market/orders'), api('/market/listings')]);
+
+  document.getElementById('mo-tbody').innerHTML = orders.length ? orders.map(o=>`
+    <tr>
+      <td class="mono">#${o.id}</td>
+      <td>${o.title}</td>
+      <td>${o.buyer_name || '—'}${o.buyer_username?' @'+o.buyer_username:''}</td>
+      <td>${o.seller_name || '—'}${o.seller_username?' @'+o.seller_username:''}</td>
+      <td class="mono">${fmt(o.price_rial)} ت</td>
+      <td class="mono">${fmt(o.fee_rial)} ت</td>
+      <td><span class="pill ${o.status==='completed'?'active':(o.status==='disputed'?'failed':'pending')}">${orderStatusLabel(o.status)}</span></td>
+      <td>${o.created_at?.slice(0,16)}</td>
+      <td>
+        ${['pending_transfer','disputed'].includes(o.status) ? `
+          <div style="display:flex; gap:6px;">
+            <button class="btn small" style="background:var(--success); color:#08251a;" onclick="releaseMarketOrder(${o.id})">آزادسازی برای فروشنده</button>
+            <button class="btn danger small" onclick="refundMarketOrder(${o.id})">استرداد به خریدار</button>
+          </div>` : '—'}
+      </td>
+    </tr>
+  `).join('') : `<tr class="empty-row"><td colspan="9">سفارشی ثبت نشده</td></tr>`;
+
+  document.getElementById('ml-tbody').innerHTML = listings.length ? listings.map(l=>`
+    <tr>
+      <td>${l.title}<div style="color:var(--text-2); font-size:10.5px;">${l.description || ''}</div></td>
+      <td>${l.first_name || '—'}${l.username?' @'+l.username:''}</td>
+      <td class="mono">${fmt(l.price_rial)} ت</td>
+      <td><span class="pill ${l.status==='active'?'active':(l.status==='cancelled'?'failed':'pending')}">${listingStatusLabel(l.status)}</span></td>
+      <td>${l.created_at?.slice(0,16)}</td>
+      <td>
+        ${l.status==='active' ? `<button class="btn danger small" onclick="removeListing(${l.id})">حذف آگهی</button>` : '—'}
+      </td>
+    </tr>
+  `).join('') : `<tr class="empty-row"><td colspan="6">آگهی‌ای ثبت نشده</td></tr>`;
+}
+async function releaseMarketOrder(id){
+  if(!confirm('مبلغ سفارش به کیف‌پول فروشنده واریز بشه؟')) return;
+  try { await api(`/market/orders/${id}/release`, {method:'POST'}); toast('✅ مبلغ به فروشنده آزاد شد'); renderMarket(); }
+  catch(e){ toast('❌ ' + e.message); }
+}
+async function refundMarketOrder(id){
+  if(!confirm('مبلغ سفارش به کیف‌پول خریدار برگردونده بشه؟')) return;
+  try { await api(`/market/orders/${id}/refund`, {method:'POST'}); toast('↩️ مبلغ به خریدار مسترد شد'); renderMarket(); }
+  catch(e){ toast('❌ ' + e.message); }
+}
+async function removeListing(id){
+  if(!confirm('این آگهی حذف (لغو) بشه؟')) return;
+  try { await api(`/market/listings/${id}`, {method:'PATCH', body:JSON.stringify({status:'cancelled'})}); toast('🗑 آگهی لغو شد'); renderMarket(); }
+  catch(e){ toast('❌ ' + e.message); }
+}
+
+/* ===================== REFERRALS ===================== */
+async function renderReferrals(){
+  const m = document.getElementById('main');
+  m.innerHTML = `
+    <div class="page-head"><div><h1>رفرال‌ها</h1><p>کاربرانی که بیشترین دعوت و پورسانت را داشته‌اند</p></div></div>
+    <div class="panel" style="padding:0;"><table>
+      <thead><tr><th>کاربر</th><th>تعداد دعوت</th><th>پورسانت دریافتی</th></tr></thead>
+      <tbody id="ref-tbody"><tr class="empty-row"><td colspan="3">در حال بارگذاری…</td></tr></tbody>
+    </table></div>
+  `;
+  const rows = await api('/referrals');
+  document.getElementById('ref-tbody').innerHTML = rows.length ? rows.map(r=>`
+    <tr>
+      <td>${r.first_name || '—'}${r.username?' @'+r.username:''}</td>
+      <td>${fmt(r.invited_count)}</td>
+      <td class="mono">${fmt(r.commission_earned)} ت</td>
+    </tr>
+  `).join('') : `<tr class="empty-row"><td colspan="3">هنوز رفرالی ثبت نشده</td></tr>`;
+}
+
+/* ===================== TASKS ===================== */
+async function renderTasks(){
+  const m = document.getElementById('main');
+  m.innerHTML = `
+    <div class="page-head">
+      <div><h1>تسک‌ها</h1><p>مدیریت تسک‌های قابل انجام برای کاربران (عضویت در کانال، لینک و...)</p></div>
+      <button class="btn small" onclick="openTaskForm()">+ افزودن تسک</button>
+    </div>
+    <div class="panel" style="padding:0;"><table>
+      <thead><tr><th>عنوان</th><th>نوع</th><th>جایزه</th><th>تعداد انجام</th><th>وضعیت</th><th></th></tr></thead>
+      <tbody id="tasks-tbody"><tr class="empty-row"><td colspan="6">در حال بارگذاری…</td></tr></tbody>
+    </table></div>
+  `;
+  const rows = await api('/tasks');
+  const typeLabel = {join_channel:'عضویت در کانال', link:'لینک ساده'};
+  document.getElementById('tasks-tbody').innerHTML = rows.length ? rows.map(t=>`
+    <tr>
+      <td>${t.title}<div style="color:var(--text-2); font-size:10.5px;">${t.id}</div></td>
+      <td>${typeLabel[t.type]||t.type}</td>
+      <td class="mono">${t.reward_rial?fmt(t.reward_rial)+' ت':''}${t.reward_rial&&t.reward_stars?' + ':''}${t.reward_stars?'⭐️ '+fmt(t.reward_stars):''}</td>
+      <td>${fmt(t.completions)}</td>
+      <td><span class="pill ${t.active?'active':'failed'}">${t.active?'فعال':'غیرفعال'}</span></td>
+      <td style="display:flex; gap:6px;">
+        <button class="btn secondary small" onclick='openTaskForm(${JSON.stringify(t)})'>ویرایش</button>
+        <button class="btn danger small" onclick="deleteTask('${t.id}')">حذف</button>
+      </td>
+    </tr>
+  `).join('') : `<tr class="empty-row"><td colspan="6">تسکی ثبت نشده</td></tr>`;
+}
+function onTaskTypeChange(){
+  const type = document.getElementById('tf-type').value;
+  document.getElementById('tf-channel-wrap').style.display = type==='join_channel' ? 'block':'none';
+  document.getElementById('tf-link-wrap').style.display = type==='link' ? 'block':'none';
+}
+function openTaskForm(t=null){
+  openModal(`
+    <div class="modal-title">${t?'ویرایش تسک':'افزودن تسک'} <span class="x" onclick="closeModal()">✕</span></div>
+    <div class="field"><label>شناسه (فقط برای تسک جدید)</label><input id="tf-id" value="${t?.id||''}" ${t?'disabled':''}></div>
+    <div class="field"><label>عنوان</label><input id="tf-title" value="${t?.title||''}"></div>
+    <div class="field"><label>توضیحات</label><input id="tf-desc" value="${t?.description||''}"></div>
+    <div class="field"><label>نوع تسک</label>
+      <select id="tf-type" onchange="onTaskTypeChange()">
+        <option value="join_channel" ${t?.type==='join_channel'?'selected':''}>عضویت در کانال (خودکار چک می‌شه)</option>
+        <option value="link" ${t?.type==='link'?'selected':''}>لینک ساده (کاربر می‌زنه و جایزه می‌گیره)</option>
+      </select>
+    </div>
+    <div class="field" id="tf-channel-wrap"><label>یوزرنیم کانال (بدون @)</label><input id="tf-channel" value="${t?.channel_username||''}"></div>
+    <div class="field" id="tf-link-wrap" style="display:none;"><label>لینک</label><input id="tf-link" value="${t?.link||''}"></div>
+    <div class="field"><label>جایزه ریالی (تومان)</label><input id="tf-reward-rial" type="number" value="${t?.reward_rial||0}"></div>
+    <div class="field"><label>جایزه استارز</label><input id="tf-reward-stars" type="number" value="${t?.reward_stars||0}"></div>
+    ${t ? `<div class="field"><label>وضعیت</label><select id="tf-active"><option value="1" ${t.active?'selected':''}>فعال</option><option value="0" ${!t.active?'selected':''}>غیرفعال</option></select></div>` : ''}
+    <button class="btn" onclick="saveTask(${t?`'${t.id}'`:'null'})">ذخیره</button>
+  `);
+  onTaskTypeChange();
+}
+async function saveTask(existingId){
+  const body = {
+    title: document.getElementById('tf-title').value,
+    description: document.getElementById('tf-desc').value,
+    type: document.getElementById('tf-type').value,
+    channel_username: document.getElementById('tf-channel').value || null,
+    link: document.getElementById('tf-link').value || null,
+    reward_rial: Number(document.getElementById('tf-reward-rial').value) || 0,
+    reward_stars: Number(document.getElementById('tf-reward-stars').value) || 0,
+  };
+  if(!body.title){ toast('❌ عنوان الزامی است'); return; }
+  if(existingId){
+    body.active = Number(document.getElementById('tf-active').value);
+    await api(`/tasks/${existingId}`, {method:'PATCH', body:JSON.stringify(body)});
+  } else {
+    const id = document.getElementById('tf-id').value.trim();
+    if(!id){ toast('❌ شناسه تسک را وارد کن'); return; }
+    await api('/tasks', {method:'POST', body:JSON.stringify({id, ...body})});
+  }
+  toast('✅ تسک ذخیره شد');
+  closeModal();
+  renderTasks();
+}
+async function deleteTask(id){
+  if(!confirm('تسک حذف شود؟')) return;
+  await api(`/tasks/${id}`, {method:'DELETE'});
+  toast('🗑 تسک حذف شد');
+  renderTasks();
+}
+
+/* ===================== INIT ===================== */
+if(token){ enterShell(); } else { document.getElementById('login-screen').style.display='flex'; }
+</script>
+</body>
+</html>
